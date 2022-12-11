@@ -20,7 +20,10 @@ class AVLNode(object):
 		self.right = None
 		self.parent = None
 		self.height = -1 # Balance factor
-		self.size = 1
+		if self.height == -1:
+			self.size = 0
+		else:
+			self.size = 1
 		
 
 	"""returns the left child
@@ -139,7 +142,7 @@ class AVLTreeList(object):
 	@returns: True if the list is empty, False otherwise
 	"""
 	def empty(self):
-		return None
+		return self.size == 0
 
 
 	"""retrieves the value of the i'th item in the list
