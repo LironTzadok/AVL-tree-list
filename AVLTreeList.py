@@ -19,12 +19,13 @@ class AVLNode(object):
 		self.left = None
 		self.right = None
 		self.parent = None
-		self.height = -1 # Balance factor
-		if self.height == -1:
-			self.size = 0
-		else:
-			self.size = 1
-		
+		self.height = -1
+		self.size = 0
+
+
+	def setSize(self, size):
+		self.size = size
+
 
 	"""returns the left child
 	@rtype: AVLNode
@@ -156,7 +157,7 @@ class AVLTreeList(object):
 	@returns: the the value of the i'th item in the list
 	"""
 	def retrieve(self, i):
-		return self.treeSelect(i+1).value
+		return self.treeSelect(i + 1).value
 
 	"""retrieves the value of the i'th item in the AVL Tree
 
@@ -168,14 +169,14 @@ class AVLTreeList(object):
 	"""
 	def treeSelect(self, i):
 		x = self.root
-		if i>x.size:
+		if i > x.size:
 			return None
-		lestSize=x.left.size + 1
-		if i==leftSize :
+		left_size = x.left.size + 1
+		if i == left_size :
 			return x
-		if i<lestSize :
+		if i < left_size :
 			return self.treeSelect(x.left,i)
-		return self.treeSelect(x.right,i - lestSize)
+		return self.treeSelect(x.right,i - left_size)
 
 
 	"""inserts val at position i in the list
@@ -189,18 +190,95 @@ class AVLTreeList(object):
 	@returns: the number of rebalancing operation due to AVL rebalancing
 	"""
 	def insert(self, i, val):
-		new_node=AVLNode(val)
-		if i==self.size:
-			max_node=self.maxNode()
-			max_node.right=new_node
-		elif i<self.size:
-			tmp_node=self.treeSelect(i+1)
+		new_node = self.createRealNode(val)
+		if self.empty():
+			self.root = new_node
+		elif i == self.size:
+			max_node = self.maxNode()
+			max_node.right = new_node
+		elif i < self.size:
+			tmp_node = self.treeSelect(i + 1)
 			#if temp.node has no left child
 			if not tmp_node.left.isRealNode():
 				tmp_node.setLeft(new_node)
 		else:
 			predecessor_node=self.predecessor(tmp_node)
 			predecessor_node.serRight(new_node)
+		self.rotateAndFixSizeField(new_node)
+
+
+	def rotateAndFixSizeField(self, node_inserted):
+		y = node_inserted.getParent()
+		while y is not None:
+			new_BF = y.getLeft().getHeight() - y.getRight().getHeight()
+			y.setHeight(max(y.getLeft, y.getRight) + 1)
+			y.setSize(y.getLeft.getSize + y.getLeft.getSize + 1)
+			if new_BF == -2:
+				right_child_BF = y.getRight.getLeft().getHeight() - y.getRight.getRight().getHeight()
+				if right_child_BF == -1 or right_child_BF == 0:
+					leftRotate(y, y.getParent().getRight == y)
+				elif right_child_BF == 1:
+					rightLeftRotate(y)
+			elif new_BF == 2:
+				left_child_BF = y.getLeft.getLeft().getHeight() - y.getLeft.getRight().getHeight()
+				if left_child_BF == 1 or right_child_BF == 0:
+					rightRotate(y, y.getParent().getLeft == y)
+				elif left_child_BF == -1:
+					leftRightRotate(y)
+			# check y.setHeight(max(y.getLeft, y.getRight) + 1)
+			# check y.setSize(y.getLeft.getSize + y.getLeft.getSize + 1)
+
+
+
+	def leftRotate(self, node, isLeftChild):
+		b = node
+		a = node.getRight()
+		b.setRight(a.getLeft())
+		b.getRight.setParent(b)
+		a.setLeft(b)
+		a.setParent(b.getParent)
+		if isLeftChild:
+			a.getParent().setLeft(a)
+		else:
+			a.getParent().setRight(a)
+		b.setParent(a)
+		b.setHeight(max(b.getLeft, b.getRight) + 1)
+		a.setHeight(max(a.getLeft, a.getRight) + 1)
+
+	def rightLeftRotate(self, node):
+		# check if we can call leftRotate and then rightRotate
+
+	def rightRotate(self, node, isRightChild):
+		b = node
+		a = node.getLeft()
+		b.setLeft(a.getRight())
+		b.getLeft.setParent(b)
+		a.setRight(b)
+		a.setParent(b.getParent)
+		if isRightChild:
+			a.getParent().setRight(a)
+		else:
+			a.getParent().setLeft(a)
+		b.setParent(a)
+		b.setHeight(max(b.getLeft, b.getRight) + 1)
+		a.setHeight(max(a.getLeft, a.getRight) + 1)
+
+
+
+	def leftRightRotate(self, node):
+		# check if we can call rightRotate and then leftRotate
+
+	def createRealNode(self, val):
+		new_node = AVLNode(val)
+		new_node.setHeight(0)
+		new_node.setSize(1)
+		virtual_child1 = AVLNode(None)
+		new_node.setLeft(virtual_child1)
+		virtual_child2 = AVLNode(None)
+		new_node.setRight(virtual_child2)
+		virtual_child1.setParent(new_node)
+		virtual_child2.setParent(new_node)
+		return new_node
 
 
 	"""deletes the i'th item in the list
@@ -293,6 +371,7 @@ class AVLTreeList(object):
 	"""
 	def search(self, val):
 		return None
+
 
 
 
