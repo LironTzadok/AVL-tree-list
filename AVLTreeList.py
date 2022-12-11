@@ -77,6 +77,7 @@ class AVLNode(object):
 	"""
 	def setLeft(self, node):
 		self.left = node
+		node.setParent(self)
 
 	"""sets right child
 
@@ -85,6 +86,7 @@ class AVLNode(object):
 	"""
 	def setRight(self, node):
 		self.right = node
+		node.setParent(self)
 
 	"""sets parent
 
@@ -154,7 +156,27 @@ class AVLTreeList(object):
 	@returns: the the value of the i'th item in the list
 	"""
 	def retrieve(self, i):
-		return None
+		return self.treeSelect(i+1).value
+
+	"""retrieves the value of the i'th item in the AVL Tree
+
+	@type i: int
+	@pre: 0 <= i < self.length()
+	@param i: Rank in the Tree
+	@rtype: AVLNode
+	@returns: value of the i'th smallest element in the Tree
+	"""
+	def treeSelect(self, i):
+		x = self.root
+		if i>x.size:
+			return None
+		lestSize=x.left.size + 1
+		if i==leftSize :
+			return x
+		if i<lestSize :
+			return self.treeSelect(x.left,i)
+		return self.treeSelect(x.right,i - lestSize)
+
 
 	"""inserts val at position i in the list
 
@@ -167,7 +189,18 @@ class AVLTreeList(object):
 	@returns: the number of rebalancing operation due to AVL rebalancing
 	"""
 	def insert(self, i, val):
-		return -1
+		new_node=AVLNode(val)
+		if i==self.size:
+			max_node=self.maxNode()
+			max_node.right=new_node
+		elif i<self.size:
+			tmp_node=self.treeSelect(i+1)
+			#if temp.node has no left child
+			if not tmp_node.left.isRealNode():
+				tmp_node.setLeft(new_node)
+		else:
+			predecessor_node=self.predecessor(tmp_node)
+			predecessor_node.serRight(new_node)
 
 
 	"""deletes the i'th item in the list
@@ -178,6 +211,17 @@ class AVLTreeList(object):
 	@rtype: int
 	@returns: the number of rebalancing operation due to AVL rebalancing
 	"""
+
+	def maxNode(self):
+		"""/////////////////do///////////////"""
+		return None
+
+	def predecessor(self,node):
+		"""/////////////////do///////////////"""
+		return None
+
+	def
+
 	def delete(self, i):
 		return -1
 
