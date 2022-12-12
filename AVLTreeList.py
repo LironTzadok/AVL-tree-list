@@ -22,10 +22,6 @@ class AVLNode(object):
 		self.size = 0
 
 
-	def setSize(self, size):
-		self.size = size
-
-
 	"""returns the left child
 	@rtype: AVLNode
 	@returns: the left child of self, None if there is no left child
@@ -70,6 +66,15 @@ class AVLNode(object):
 			return self.height
 		return -1
 
+	"""returns the size
+
+	@rtype: int
+	@returns: the size of self
+	"""
+	def getSize(self):
+		return self.size
+
+
 	"""sets left child
 
 	@type node: AVLNode
@@ -112,6 +117,15 @@ class AVLNode(object):
 	def setHeight(self, h):
 		self.height = h
 
+
+	"""sets the size of the node
+
+	@type size: int
+	@param size: the size
+	"""
+	def setSize(self, size):
+		self.size = size
+
 	"""returns whether self is not a virtual node 
 
 	@rtype: bool
@@ -119,7 +133,6 @@ class AVLNode(object):
 	"""
 	def isRealNode(self):
 		return self.height != -1 and self is not None
-
 
 
 """
@@ -211,7 +224,7 @@ class AVLTreeList(object):
 		while y is not None:
 			new_BF = y.getLeft().getHeight() - y.getRight().getHeight()
 			y.setHeight(max(y.getLeft, y.getRight) + 1)
-			y.setSize(y.getLeft.getSize + y.getLeft.getSize + 1)
+			y.setSize(y.getSize() + 1)
 			if new_BF == -2:
 				right_child_BF = y.getRight.getLeft().getHeight() - y.getRight.getRight().getHeight()
 				if right_child_BF == -1 or right_child_BF == 0:
@@ -225,8 +238,24 @@ class AVLTreeList(object):
 				elif left_child_BF == -1:
 					self.leftRightRotate(y)
 			# check y.setHeight(max(y.getLeft, y.getRight) + 1)
-			# check y.setSize(y.getLeft.getSize + y.getLeft.getSize + 1)
 
+
+	def rightRotate(self, node, isRightChild):
+		b = node
+		a = node.getLeft()
+		b.setLeft(a.getRight())
+		b.getLeft.setParent(b)
+		a.setRight(b)
+		a.setParent(b.getParent)
+		if isRightChild:
+			a.getParent().setRight(a)
+		else:
+			a.getParent().setLeft(a)
+		b.setParent(a)
+		a.setSize(b.getSize())
+		b.setSize(b.getLeft().getSize()+b.getRight().getSize()+1)
+		b.setHeight(max(b.getLeft, b.getRight) + 1)
+		a.setHeight(max(a.getLeft, a.getRight) + 1)
 
 
 	def leftRotate(self, node, isLeftChild):
@@ -241,28 +270,14 @@ class AVLTreeList(object):
 		else:
 			a.getParent().setRight(a)
 		b.setParent(a)
+		b.setSize(a.getSize())
+		a.setSize(a.getLeft().getSize()+a.getRight().getSize()+1)
 		b.setHeight(max(b.getLeft, b.getRight) + 1)
 		a.setHeight(max(a.getLeft, a.getRight) + 1)
 
 	def rightLeftRotate(self, node):
 		self.rightRotate(node.getRight(), True)
 		self.leftRotate(node, node.getParent().getRight == node)
-
-	def rightRotate(self, node, isRightChild):
-		b = node
-		a = node.getLeft()
-		b.setLeft(a.getRight())
-		b.getLeft.setParent(b)
-		a.setRight(b)
-		a.setParent(b.getParent)
-		if isRightChild:
-			a.getParent().setRight(a)
-		else:
-			a.getParent().setLeft(a)
-		b.setParent(a)
-		b.setHeight(max(b.getLeft, b.getRight) + 1)
-		a.setHeight(max(a.getLeft, a.getRight) + 1)
-
 
 
 	def leftRightRotate(self, node):
