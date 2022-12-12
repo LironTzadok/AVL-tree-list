@@ -4,7 +4,6 @@
 #id2      - complete info
 #name2    - complete info  
 
-push
 
 """A class represnting a node in an AVL tree"""
 
@@ -203,7 +202,7 @@ class AVLTreeList(object):
 				tmp_node.setLeft(new_node)
 		else:
 			predecessor_node=self.predecessor(tmp_node)
-			predecessor_node.serRight(new_node)
+			predecessor_node.setRight(new_node)
 		self.rotateAndFixSizeField(new_node)
 
 
@@ -216,13 +215,13 @@ class AVLTreeList(object):
 			if new_BF == -2:
 				right_child_BF = y.getRight.getLeft().getHeight() - y.getRight.getRight().getHeight()
 				if right_child_BF == -1 or right_child_BF == 0:
-					self.leftRotate(y, y.getParent().getRight == y)
+					self.leftRotate(y, y.getParent().getLeft == y)
 				elif right_child_BF == 1:
 					self.rightLeftRotate(y)
 			elif new_BF == 2:
 				left_child_BF = y.getLeft.getLeft().getHeight() - y.getLeft.getRight().getHeight()
 				if left_child_BF == 1 or right_child_BF == 0:
-					self.rightRotate(y, y.getParent().getLeft == y)
+					self.rightRotate(y, y.getParent().getRight == y)
 				elif left_child_BF == -1:
 					self.leftRightRotate(y)
 			# check y.setHeight(max(y.getLeft, y.getRight) + 1)
@@ -246,7 +245,8 @@ class AVLTreeList(object):
 		a.setHeight(max(a.getLeft, a.getRight) + 1)
 
 	def rightLeftRotate(self, node):
-		# check if we can call leftRotate and then rightRotate
+		self.rightRotate(node.getRight(), True)
+		self.leftRotate(node, node.getParent().getRight == node)
 
 	def rightRotate(self, node, isRightChild):
 		b = node
@@ -266,7 +266,9 @@ class AVLTreeList(object):
 
 
 	def leftRightRotate(self, node):
-		# check if we can call rightRotate and then leftRotate
+		self.leftRotate(node.getLeft(), True)
+		self.rightRotate(node, node.getParent().getRight == node)
+
 
 	def createRealNode(self, val):
 		new_node = AVLNode(val)
