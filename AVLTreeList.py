@@ -118,7 +118,7 @@ class AVLNode(object):
 	@returns: False if self is a virtual node, True otherwise.
 	"""
 	def isRealNode(self):
-		return self.height != -1
+		return self.height != -1 and self != None
 
 
 
@@ -264,7 +264,6 @@ class AVLTreeList(object):
 		a.setHeight(max(a.getLeft, a.getRight) + 1)
 
 
-
 	def leftRightRotate(self, node):
 		self.leftRotate(node.getLeft(), True)
 		self.rightRotate(node, node.getParent().getRight == node)
@@ -292,15 +291,16 @@ class AVLTreeList(object):
 	@returns: the number of rebalancing operation due to AVL rebalancing
 	"""
 
-	def maxNode(self):
-		"""/////////////////do///////////////"""
-		return None
+    """returns the biggest node in the tree if called from root"""
+	def maxNode(self,node):
+		while node.right.isRealNode:
+			node = node.getRight()
+		return node
 
 	def predecessor(self,node):
 		"""/////////////////do///////////////"""
 		return None
 
-	def
 
 	def delete(self, i):
 		return -1
