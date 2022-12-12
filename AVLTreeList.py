@@ -216,15 +216,15 @@ class AVLTreeList(object):
 			if new_BF == -2:
 				right_child_BF = y.getRight.getLeft().getHeight() - y.getRight.getRight().getHeight()
 				if right_child_BF == -1 or right_child_BF == 0:
-					leftRotate(y, y.getParent().getRight == y)
+					self.leftRotate(y, y.getParent().getRight == y)
 				elif right_child_BF == 1:
-					rightLeftRotate(y)
+					self.rightLeftRotate(y)
 			elif new_BF == 2:
 				left_child_BF = y.getLeft.getLeft().getHeight() - y.getLeft.getRight().getHeight()
 				if left_child_BF == 1 or right_child_BF == 0:
-					rightRotate(y, y.getParent().getLeft == y)
+					self.rightRotate(y, y.getParent().getLeft == y)
 				elif left_child_BF == -1:
-					leftRightRotate(y)
+					self.leftRightRotate(y)
 			# check y.setHeight(max(y.getLeft, y.getRight) + 1)
 			# check y.setSize(y.getLeft.getSize + y.getLeft.getSize + 1)
 
