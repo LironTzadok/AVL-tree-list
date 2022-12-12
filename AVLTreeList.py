@@ -4,7 +4,7 @@
 #id2      - complete info
 #name2    - complete info  
 
-
+push
 
 """A class represnting a node in an AVL tree"""
 
