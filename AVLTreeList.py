@@ -1,8 +1,8 @@
-#username - complete info
-#id1      - complete info 
-#name1    - complete info 
-#id2      - complete info
-#name2    - complete info  
+#username - talbentov1
+#id1      - 208634766
+#name1    - Tal Ben Tov
+#id2      - 208005835
+#name2    - Liron Tzadok
 
 
 """A class represnting a node in an AVL tree"""
