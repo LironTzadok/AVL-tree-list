@@ -197,12 +197,12 @@ class AVLTreeList(object):
 			max_node.right = new_node
 		elif i < self.size:
 			tmp_node = self.treeSelect(i + 1)
-			#if temp.node has no left child
+			# if temp.node has no left child
 			if not tmp_node.left.isRealNode():
 				tmp_node.setLeft(new_node)
-		else:
-			predecessor_node=self.predecessor(tmp_node)
-			predecessor_node.setRight(new_node)
+			else:
+				predecessor_node = self.predecessor(tmp_node)
+				predecessor_node.setRight(new_node)
 		self.rotateAndFixSizeField(new_node)
 
 
@@ -292,18 +292,20 @@ class AVLTreeList(object):
 	@returns: the number of rebalancing operation due to AVL rebalancing
 	"""
 
+	def delete(self, i):
+		return -1
+
+
 	def maxNode(self):
 		"""/////////////////do///////////////"""
 		return None
 
-	def predecessor(self,node):
-		"""/////////////////do///////////////"""
-		return None
-
-	def
-
-	def delete(self, i):
-		return -1
+	def predecessor(self, node):
+		# method implements only "go left then all the way right" case for insertion.
+		if not (node.isRealNode()):
+			return None
+		if node.getLeft().isRealNode():
+			return self.maxNode(node.getLeft())
 
 
 	"""returns the value of the first item in the list
