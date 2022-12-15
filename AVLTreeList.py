@@ -3,7 +3,7 @@
 #name1    - Tal Ben Tov
 #id2      - 208005835
 #name2    - Liron Tzadok
-
+from printree import *
 
 """A class represnting a node in an AVL tree"""
 
@@ -20,6 +20,10 @@ class AVLNode(object):
 		self.parent = None
 		self.height = -1
 		self.size = 0
+
+
+	def __repr__(self):
+		return "(" + str(self.value) + ")"
 
 
 	"""returns the left child
@@ -151,6 +155,13 @@ class AVLTreeList(object):
 		# add your fields here
 
 
+	def __repr__(self):
+		out = ""
+		for row in printree(self.root):
+			out = out + row + "\n"
+		return out
+
+
 	"""returns whether the list is empty
 
 	@rtype: bool
@@ -179,16 +190,15 @@ class AVLTreeList(object):
 	@rtype: AVLNode
 	@returns: value of the i'th smallest element in the Tree
 	"""
-	def treeSelect(self, i):
-		x = self.root
-		if i > x.size:
+	def treeSelect(self, node, i):
+		if i > node.getSize():
 			return None
-		left_size = x.left.size + 1
-		if i == left_size :
-			return x
-		if i < left_size :
-			return self.treeSelect(x.left,i)
-		return self.treeSelect(x.right,i - left_size)
+		left_size = node.getLeft().getSize() + 1
+		if i == left_size:
+			return node
+		if i < left_size:
+			return self.treeSelect(node.getLeft() ,i)
+		return self.treeSelect(node.getRight(), i - left_size)
 
 
 	"""inserts val at position i in the list
@@ -206,10 +216,10 @@ class AVLTreeList(object):
 		if self.empty():
 			self.root = new_node
 		elif i == self.size:
-			max_node = self.maxNode()
-			max_node.right = new_node
+			max_node = self.maxNode(self.getRoot())
+			max_node.setRight(new_node)
 		elif i < self.size:
-			tmp_node = self.treeSelect(i + 1)
+			tmp_node = self.treeSelect(self.root, i + 1)
 			# if temp.node has no left child
 			if not tmp_node.left.isRealNode():
 				tmp_node.setLeft(new_node)
@@ -217,72 +227,95 @@ class AVLTreeList(object):
 				predecessor_node = self.predecessor(tmp_node)
 				predecessor_node.setRight(new_node)
 		self.rotateAndFixSizeField(new_node)
+		self.size += 1
 
 
 	def rotateAndFixSizeField(self, node_inserted):
 		y = node_inserted.getParent()
 		while y is not None:
 			new_BF = y.getLeft().getHeight() - y.getRight().getHeight()
-			y.setHeight(max(y.getLeft, y.getRight) + 1)
-			y.setSize(y.getSize() + 1)
+			y.setHeight(max(y.getLeft().getHeight(), y.getRight().getHeight()) + 1)
 			if new_BF == -2:
-				right_child_BF = y.getRight.getLeft().getHeight() - y.getRight.getRight().getHeight()
+				right_child_BF = y.getRight().getLeft().getHeight() - y.getRight().getRight().getHeight()
 				if right_child_BF == -1 or right_child_BF == 0:
-					self.leftRotate(y, y.getParent().getLeft == y)
+					# if y is not the root
+					if(y.getParent() is not None):
+						self.leftRotate(y, False, y.getParent().getLeft() == y)
+					else:
+						self.leftRotate(y, True)
 				elif right_child_BF == 1:
 					self.rightLeftRotate(y)
 			elif new_BF == 2:
-				left_child_BF = y.getLeft.getLeft().getHeight() - y.getLeft.getRight().getHeight()
+				left_child_BF = y.getLeft().getLeft().getHeight() - y.getLeft().getRight().getHeight()
 				if left_child_BF == 1 or right_child_BF == 0:
-					self.rightRotate(y, y.getParent().getRight == y)
+					# if y is not the root
+					if(y.getParent() is not None):
+						self.rightRotate(y, False, y.getParent().getRight() == y)
+					else:
+						self.rightRotate(y, True)
 				elif left_child_BF == -1:
 					self.leftRightRotate(y)
-			# check y.setHeight(max(y.getLeft, y.getRight) + 1)
+			else:
+				y.setSize(y.getLeft().getSize() + y.getRight().getSize() + 1)
+			y = y.getParent()
 
 
-	def rightRotate(self, node, isRightChild):
-		b = node
-		a = node.getLeft()
-		b.setLeft(a.getRight())
-		b.getLeft.setParent(b)
-		a.setRight(b)
-		a.setParent(b.getParent)
-		if isRightChild:
-			a.getParent().setRight(a)
+	def rightRotate(self, node, isRoot, isRightChild = False):
+		z = node
+		y = node.getLeft()
+		z.setLeft(y.getRight())
+		y.setParent(z.getParent())
+		y.setRight(z)
+		if not isRoot:
+			if isRightChild:
+				y.getParent().setRight(y)
+			else:
+				y.getParent().setLeft(y)
 		else:
-			a.getParent().setLeft(a)
-		b.setParent(a)
-		a.setSize(b.getSize())
-		b.setSize(b.getLeft().getSize()+b.getRight().getSize()+1)
-		b.setHeight(max(b.getLeft, b.getRight) + 1)
-		a.setHeight(max(a.getLeft, a.getRight) + 1)
+			self.root = y
+		z.setParent(y)
+		y.setSize(y.getLeft().getSize() + y.getRight().getSize() + 1)
+		z.setSize(z.getLeft().getSize() + z.getRight().getSize() + 1)
+		z.setHeight(max(z.getLeft().getHeight(), z.getRight().getHeight()) + 1)
+		y.setHeight(max(y.getLeft().getHeight(), y.getRight().getHeight()) + 1)
 
 
-	def leftRotate(self, node, isLeftChild):
-		b = node
-		a = node.getRight()
-		b.setRight(a.getLeft())
-		b.getRight.setParent(b)
-		a.setLeft(b)
-		a.setParent(b.getParent)
-		if isLeftChild:
-			a.getParent().setLeft(a)
+	def leftRotate(self, node, isRoot, isLeftChild = False):
+		z = node
+		y = node.getRight()
+		z.setRight(y.getLeft())
+		y.setParent(z.getParent())
+		y.setLeft(z)
+		if not isRoot:
+			if isLeftChild:
+				y.getParent().setLeft(y)
+			else:
+				y.getParent().setRight(y)
 		else:
-			a.getParent().setRight(a)
-		b.setParent(a)
-		b.setSize(a.getSize())
-		a.setSize(a.getLeft().getSize()+a.getRight().getSize()+1)
-		b.setHeight(max(b.getLeft, b.getRight) + 1)
-		a.setHeight(max(a.getLeft, a.getRight) + 1)
+			self.root = y
+		z.setParent(y)
+		z.setSize(z.getLeft().getSize() + z.getRight().getSize() + 1)
+		y.setSize(y.getLeft().getSize() + y.getRight().getSize() + 1)
+		z.setHeight(max(z.getLeft().getHeight(), z.getRight().getHeight()) + 1)
+		y.setHeight(max(y.getLeft().getHeight(), y.getRight().getHeight()) + 1)
+
 
 	def rightLeftRotate(self, node):
-		self.rightRotate(node.getRight(), True)
-		self.leftRotate(node, node.getParent().getRight == node)
+		self.rightRotate(node.getRight(), False, True)
+		# if node is not the root
+		if (node.getParent() is not None):
+			self.leftRotate(node, False, node.getParent().getRight == node)
+		else:
+			self.leftRotate(node, True)
 
 
 	def leftRightRotate(self, node):
-		self.leftRotate(node.getLeft(), True)
-		self.rightRotate(node, node.getParent().getRight == node)
+		self.leftRotate(node.getLeft(), False, True)
+		# if node is not the root
+		if (node.getParent() is not None):
+			self.rightRotate(node, False, node.getParent().getRight == node)
+		else:
+			self.rightRotate(node, True)
 
 
 	def createRealNode(self, val):
@@ -293,8 +326,6 @@ class AVLTreeList(object):
 		new_node.setLeft(virtual_child1)
 		virtual_child2 = AVLNode(None)
 		new_node.setRight(virtual_child2)
-		virtual_child1.setParent(new_node)
-		virtual_child2.setParent(new_node)
 		return new_node
 
 
@@ -314,7 +345,7 @@ class AVLTreeList(object):
 	@rtype: AVLNode
 	"""
 	def maxNode(self, node):
-		while node.right.isRealNode:
+		while node.right.isRealNode():
 			node = node.getRight()
 		return node
 
@@ -399,14 +430,25 @@ class AVLTreeList(object):
 		return None
 
 
-
-
 	"""returns the root of the tree representing the list
 
 	@rtype: AVLNode
 	@returns: the root, None if the list is empty
 	"""
 	def getRoot(self):
-		return None
+		return self.root
 
 
+my_tree = AVLTreeList()
+my_tree.insert(0, 'a')
+my_tree.insert(1, 'b')
+my_tree.insert(2, 'c')
+my_tree.insert(3, 'd')
+my_tree.insert(4, 'e')
+my_tree.insert(5, 'f')
+my_tree.insert(6, 'x')
+my_tree.insert(5, 'y')
+#my_tree.insert(2, 'y')
+#my_tree.insert(1, 't')
+#my_tree.insert(4, 'z')
+print(my_tree)
