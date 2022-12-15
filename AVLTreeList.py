@@ -450,16 +450,23 @@ class AVLTreeList(object):
 		return self.root
 
 
+
 my_tree = AVLTreeList()
 print(my_tree.insert(0, 'a'))
+print(my_tree)
 print(my_tree.insert(1, 'b'))
+print(my_tree)
 print(my_tree.insert(2, 'c'))
-print(my_tree.insert(3, 'd'))
-print(my_tree.insert(4, 'e'))
-print(my_tree.insert(5, 'f'))
-print(my_tree.insert(6, 'x'))
-print(my_tree.insert(5, 'y'))
+print(my_tree)
+print(my_tree.insert(1, 'd'))
+print(my_tree)
+print(my_tree.insert(1, 'e'))
+print(my_tree) #this is rightthenleft rotation, and the tree is not ok :( all the stages of the tree before the last stage(leftthenright rotation) are good
+#we still need to try leftthenright
+"""print(my_tree.insert(1, 'f'))
+print(my_tree.insert(1, 'x'))
+print(my_tree.insert(0, 'y'))"""
 #my_tree.insert(2, 'y')
 #my_tree.insert(1, 't')
 #my_tree.insert(4, 'z')
-print(my_tree)
+#print(my_tree)
