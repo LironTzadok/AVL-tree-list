@@ -268,6 +268,7 @@ class AVLTreeList(object):
 
 
 	def rightRotate(self, node, isRoot, isRightChild = False):
+		print("test: in right rotation")
 		z = node
 		y = node.getLeft()
 		z.setLeft(y.getRight())
@@ -288,6 +289,7 @@ class AVLTreeList(object):
 
 
 	def leftRotate(self, node, isRoot, isLeftChild = False):
+		print("test: in left rotation")
 		z = node
 		y = node.getRight()
 		z.setRight(y.getLeft())
@@ -308,6 +310,7 @@ class AVLTreeList(object):
 
 
 	def rightLeftRotate(self, node):
+		print("test: in right then left rotation")
 		self.rightRotate(node.getRight(), False, True)
 		# if node is not the root
 		if (node.getParent() is not None):
@@ -317,6 +320,7 @@ class AVLTreeList(object):
 
 
 	def leftRightRotate(self, node):
+		print("test: in left then right rotation")
 		self.leftRotate(node.getLeft(), False, True)
 		# if node is not the root
 		if (node.getParent() is not None):
@@ -447,13 +451,13 @@ class AVLTreeList(object):
 
 
 my_tree = AVLTreeList()
-my_tree.insert(0, 'a')
-my_tree.insert(1, 'b')
-my_tree.insert(2, 'c')
-my_tree.insert(3, 'd')
-my_tree.insert(4, 'e')
-my_tree.insert(5, 'f')
-my_tree.insert(6, 'x')
+print(my_tree.insert(0, 'a'))
+print(my_tree.insert(1, 'b'))
+print(my_tree.insert(2, 'c'))
+print(my_tree.insert(3, 'd'))
+print(my_tree.insert(4, 'e'))
+print(my_tree.insert(5, 'f'))
+print(my_tree.insert(6, 'x'))
 print(my_tree.insert(5, 'y'))
 #my_tree.insert(2, 'y')
 #my_tree.insert(1, 't')
