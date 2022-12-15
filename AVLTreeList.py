@@ -221,17 +221,19 @@ class AVLTreeList(object):
 		elif i < self.size:
 			tmp_node = self.treeSelect(self.root, i + 1)
 			# if temp.node has no left child
-			if not tmp_node.left.isRealNode():
+			if not tmp_node.getLeft().isRealNode():
 				tmp_node.setLeft(new_node)
 			else:
 				predecessor_node = self.predecessor(tmp_node)
 				predecessor_node.setRight(new_node)
-		self.rotateAndFixSizeField(new_node)
+		sum_rotations = self.rotateAndFixSizeField(new_node)
 		self.size += 1
+		return sum_rotations
 
 
 	def rotateAndFixSizeField(self, node_inserted):
 		y = node_inserted.getParent()
+		sum_rotations = 0
 		while y is not None:
 			new_BF = y.getLeft().getHeight() - y.getRight().getHeight()
 			y.setHeight(max(y.getLeft().getHeight(), y.getRight().getHeight()) + 1)
@@ -243,8 +245,10 @@ class AVLTreeList(object):
 						self.leftRotate(y, False, y.getParent().getLeft() == y)
 					else:
 						self.leftRotate(y, True)
+					sum_rotations += 1
 				elif right_child_BF == 1:
 					self.rightLeftRotate(y)
+					sum_rotations += 2
 			elif new_BF == 2:
 				left_child_BF = y.getLeft().getLeft().getHeight() - y.getLeft().getRight().getHeight()
 				if left_child_BF == 1 or right_child_BF == 0:
@@ -253,11 +257,14 @@ class AVLTreeList(object):
 						self.rightRotate(y, False, y.getParent().getRight() == y)
 					else:
 						self.rightRotate(y, True)
+					sum_rotations += 1
 				elif left_child_BF == -1:
 					self.leftRightRotate(y)
+					sum_rotations += 2
 			else:
 				y.setSize(y.getLeft().getSize() + y.getRight().getSize() + 1)
 			y = y.getParent()
+		return sum_rotations
 
 
 	def rightRotate(self, node, isRoot, isRightChild = False):
@@ -447,7 +454,7 @@ my_tree.insert(3, 'd')
 my_tree.insert(4, 'e')
 my_tree.insert(5, 'f')
 my_tree.insert(6, 'x')
-my_tree.insert(5, 'y')
+print(my_tree.insert(5, 'y'))
 #my_tree.insert(2, 'y')
 #my_tree.insert(1, 't')
 #my_tree.insert(4, 'z')
