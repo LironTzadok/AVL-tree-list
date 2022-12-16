@@ -12,6 +12,7 @@ class AVLNode(object):
 
 	@type value: str
 	@param value: data of your node
+	time complexity: O(1)
 	"""
 	def __init__(self, value):
 		self.value = value
@@ -22,13 +23,21 @@ class AVLNode(object):
 		self.size = 0
 
 
+	"""responsible printing node in specific format
+	
+	@rtype: None
+	@returns: None
+	time complexity: O(1)
+	"""
 	def __repr__(self):
 		return "(" + str(self.value) + ")"
 
 
 	"""returns the left child
+	
 	@rtype: AVLNode
 	@returns: the left child of self, None if there is no left child
+	time complexity: O(1)
 	"""
 	def getLeft(self):
 		return self.left
@@ -38,42 +47,51 @@ class AVLNode(object):
 
 	@rtype: AVLNode
 	@returns: the right child of self, None if there is no right child
+	time complexity: O(1)
 	"""
 	def getRight(self):
 		return self.right
+
 
 	"""returns the parent 
 
 	@rtype: AVLNode
 	@returns: the parent of self, None if there is no parent
+	time complexity: O(1)
 	"""
 	def getParent(self):
 		return self.parent
+
 
 	"""return the value
 
 	@rtype: str
 	@returns: the value of self, None if the node is virtual
+	time complexity: O(1)
 	"""
 	def getValue(self):
 		if self.isRealNode():
 			return self.value
 		return None
 
+
 	"""returns the height
 
 	@rtype: int
 	@returns: the height of self, -1 if the node is virtual
+	time complexity: O(1)
 	"""
 	def getHeight(self):
 		if self.isRealNode():
 			return self.height
 		return -1
 
+
 	"""returns the size
 
 	@rtype: int
 	@returns: the size of self
+	time complexity: O(1)
 	"""
 	def getSize(self):
 		return self.size
@@ -83,40 +101,49 @@ class AVLNode(object):
 
 	@type node: AVLNode
 	@param node: a node
+	time complexity: O(1)
 	"""
 	def setLeft(self, node):
 		self.left = node
 		node.setParent(self)
 
+
 	"""sets right child
 
 	@type node: AVLNode
 	@param node: a node
+	time complexity: O(1)
 	"""
 	def setRight(self, node):
 		self.right = node
 		node.setParent(self)
 
+
 	"""sets parent
 
 	@type node: AVLNode
 	@param node: a node
+	time complexity: O(1)
 	"""
 	def setParent(self, node):
 		self.parent = node
+
 
 	"""sets value
 
 	@type value: str
 	@param value: data
+	time complexity: O(1)
 	"""
 	def setValue(self, value):
 		self.value = value
+
 
 	"""sets the balance factor of the node
 
 	@type h: int
 	@param h: the height
+	time complexity: O(1)
 	"""
 	def setHeight(self, h):
 		self.height = h
@@ -126,14 +153,17 @@ class AVLNode(object):
 
 	@type size: int
 	@param size: the size
+	time complexity: O(1)
 	"""
 	def setSize(self, size):
 		self.size = size
+
 
 	"""returns whether self is not a virtual node 
 
 	@rtype: bool
 	@returns: False if self is a virtual node, True otherwise.
+	time complexity: O(1)
 	"""
 	def isRealNode(self):
 		return self.height != -1 and self is not None
@@ -251,7 +281,7 @@ class AVLTreeList(object):
 					sum_rotations += 2
 			elif new_BF == 2:
 				left_child_BF = y.getLeft().getLeft().getHeight() - y.getLeft().getRight().getHeight()
-				if left_child_BF == 1 or right_child_BF == 0:
+				if left_child_BF == 1 or left_child_BF == 0:
 					# if y is not the root
 					if(y.getParent() is not None):
 						self.rightRotate(y, False, y.getParent().getRight() == y)
@@ -314,7 +344,7 @@ class AVLTreeList(object):
 		self.rightRotate(node.getRight(), False, True)
 		# if node is not the root
 		if (node.getParent() is not None):
-			self.leftRotate(node, False, node.getParent().getRight == node)
+			self.leftRotate(node, False, node.getParent().getLeft() == node)
 		else:
 			self.leftRotate(node, True)
 
@@ -450,8 +480,9 @@ class AVLTreeList(object):
 		return self.root
 
 
-
 my_tree = AVLTreeList()
+"""
+# This is a rightLeft test
 print(my_tree.insert(0, 'a'))
 print(my_tree)
 print(my_tree.insert(1, 'b'))
@@ -461,12 +492,16 @@ print(my_tree)
 print(my_tree.insert(1, 'd'))
 print(my_tree)
 print(my_tree.insert(1, 'e'))
-print(my_tree) #this is rightthenleft rotation, and the tree is not ok :( all the stages of the tree before the last stage(leftthenright rotation) are good
-#we still need to try leftthenright
-"""print(my_tree.insert(1, 'f'))
-print(my_tree.insert(1, 'x'))
-print(my_tree.insert(0, 'y'))"""
-#my_tree.insert(2, 'y')
-#my_tree.insert(1, 't')
-#my_tree.insert(4, 'z')
-#print(my_tree)
+print(my_tree)
+"""
+
+
+"""
+# this is a leftRight test
+print(my_tree.insert(0, 8))
+print(my_tree)
+print(my_tree.insert(0, 6))
+print(my_tree)
+print(my_tree.insert(1, 7))
+print(my_tree)
+"""
