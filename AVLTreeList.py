@@ -318,7 +318,6 @@ class AVLTreeList(object):
 
 
 	def rightRotate(self, node, isRoot, isRightChild = False):
-		print("test: in right rotation")
 		z = node
 		y = node.getLeft()
 		z.setLeft(y.getRight())
@@ -339,7 +338,6 @@ class AVLTreeList(object):
 
 
 	def leftRotate(self, node, isRoot, isLeftChild = False):
-		print("test: in left rotation")
 		z = node
 		y = node.getRight()
 		z.setRight(y.getLeft())
@@ -360,7 +358,6 @@ class AVLTreeList(object):
 
 
 	def rightLeftRotate(self, node):
-		print("test: in right then left rotation")
 		self.rightRotate(node.getRight(), False, True)
 		# if node is not the root
 		if (node.getParent() is not None):
@@ -370,7 +367,6 @@ class AVLTreeList(object):
 
 
 	def leftRightRotate(self, node):
-		print("test: in left then right rotation")
 		self.leftRotate(node.getLeft(), False, True)
 		# if node is not the root
 		if (node.getParent() is not None):
@@ -412,7 +408,7 @@ class AVLTreeList(object):
 				node_to_delete.getParent().setRight(node_to_delete.getRight())
 			else:
 				node_to_delete.getParent().setLeft(node_to_delete.getLeft())
-			sum_rotations += self.rotateAndFixSizeField(node_to_delete.getParent())
+			sum_rotations += self.rotateAndFixSizeField(node_to_delete)
 		elif node_to_delete.getRight().isRealNode() and node_to_delete.getRight().isRealNode():
 			#two childrens
 			successor_node=self.successor(node_to_delete)
@@ -428,10 +424,10 @@ class AVLTreeList(object):
 			successor_node.setHeight(node_to_delete.getHeight())
 		elif node_to_delete.getRight().isRealNode(): #right child
 			node_to_delete.getParent().setRight(node_to_delete.getRight())
-			sum_rotations += self.rotateAndFixSizeField(node_to_delete.getParent())
+			sum_rotations += self.rotateAndFixSizeField(node_to_delete)
 		elif node_to_delete.getLeft().isRealNode(): #left child
 			node_to_delete.getParent().setLeft(node_to_delete.getLeft())
-			sum_rotations += self.rotateAndFixSizeField(node_to_delete.getParent())
+			sum_rotations += self.rotateAndFixSizeField(node_to_delete)
 		self.size-=1
 		return sum_rotations
 
@@ -446,6 +442,7 @@ class AVLTreeList(object):
 	"""
 	def deleteRoot(self,i):
 		node_to_delete=self.root
+		sum_rotations=0
 		if node_to_delete.isLeaf():
 			self.root=None
 		if node_to_delete.getRight().isRealNode() and node_to_delete.getRight().isRealNode():
@@ -460,7 +457,8 @@ class AVLTreeList(object):
 			self.root=node_to_delete.getRight()
 		elif node_to_delete.getLeft().isRealNode(): #left child
 			self.root=node_to_delete.getLeft()
-		self.root.setParent(None)
+		if self.root != None:
+			self.root.setParent(None)
 		self.size-=1
 		return sum_rotations
 
@@ -609,16 +607,17 @@ print(my_tree.insert(1, 7))
 print(my_tree)
 """
 
-print(my_tree.insert(0, 1))
-print(my_tree.insert(1, 2))
-print(my_tree.insert(2, 3))
-print(my_tree.insert(3, 4))
-print(my_tree.insert(4, 5))
+my_tree.insert(0, 1)
+my_tree.insert(1, 2)
+my_tree.insert(2, 3)
+print(my_tree.delete(1))
+my_tree.insert(2, 4)
+"""print(my_tree.insert(4, 5))
 print(my_tree.insert(5, 6))
-print(my_tree.insert(6, 7))
+print(my_tree.insert(6, 7))"""
 
-print(my_tree)
 
-my_tree.delete(3)
-print(my_tree)
+
+#my_tree.delete(6)
+#print(my_tree)
 
