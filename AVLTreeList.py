@@ -370,7 +370,7 @@ class AVLTreeList(object):
 		self.leftRotate(node.getLeft(), False, True)
 		# if node is not the root
 		if (node.getParent() is not None):
-			self.rightRotate(node, False, node.getParent().getRight == node)
+			self.rightRotate(node, False, node.getParent().getRight() == node)
 		else:
 			self.rightRotate(node, True)
 
@@ -590,41 +590,3 @@ class AVLTreeList(object):
 
 
 my_tree = AVLTreeList()
-"""
-# This is a rightLeft test
-print(my_tree.insert(0, 'a'))
-print(my_tree)
-print(my_tree.insert(1, 'b'))
-print(my_tree)
-print(my_tree.insert(2, 'c'))
-print(my_tree)
-print(my_tree.insert(1, 'd'))
-print(my_tree)
-print(my_tree.insert(1, 'e'))
-print(my_tree)
-"""
-
-
-"""
-# this is a leftRight test
-print(my_tree.insert(0, 8))
-print(my_tree)
-print(my_tree.insert(0, 6))
-print(my_tree)
-print(my_tree.insert(1, 7))
-print(my_tree)
-"""
-
-my_tree.insert(0, 1)
-my_tree.insert(1, 2)
-my_tree.insert(2, 3)
-my_tree.insert(3, 4)
-my_tree.insert(4, 5)
-my_tree.insert(5, 6)
-my_tree.insert(6, 7)
-print(my_tree)
-my_tree.delete(5)
-print(my_tree)
-my_tree.delete(5)
-print(my_tree)
-
