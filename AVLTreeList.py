@@ -168,6 +168,15 @@ class AVLNode(object):
 	def isRealNode(self):
 		return self.height != -1 and self is not None
 
+	"""returns whether self is a leaf
+
+	@rtype: bool
+	@returns: True if self is a leaf, False otherwise.
+	time complexity: O(1)
+	"""
+	def isLeaf(self):
+		return self.height==0
+
 
 """
 A class implementing the ADT list, using an AVL tree.
@@ -210,15 +219,26 @@ class AVLTreeList(object):
 	@returns: the the value of the i'th item in the list
 	"""
 	def retrieve(self, i):
-		return self.treeSelect(i + 1).value
+		return self.treeSelect(self.root, i + 1).getValue()
 
-	"""retrieves the value of the i'th item in the AVL Tree
+	"""retrieves the i'th item in the list
+
+	@type i: int
+	@pre: 0 <= i < self.length()
+	@param i: index in the list
+	@rtype: AVLNode
+	@returns: the i'th item in the list
+	"""
+	def retrieveNode(self, i):
+		return self.treeSelect(self.root, i + 1)
+
+	"""retrieves the i'th item in the AVL Tree
 
 	@type i: int
 	@pre: 0 <= i < self.length()
 	@param i: Rank in the Tree
 	@rtype: AVLNode
-	@returns: value of the i'th smallest element in the Tree
+	@returns: the i'th item in the tree
 	"""
 	def treeSelect(self, node, i):
 		if i > node.getSize():
@@ -380,16 +400,82 @@ class AVLTreeList(object):
 	"""
 
 	def delete(self, i):
-		return -1
+		if i>=self.size:
+			return -1
+		node_to_delete=self.retrieveNode(i)
+		if node_to_delete==self.root:
+			return self.deleteRoot(i)
+		sum_rotations=0
+		if node_to_delete.isLeaf():
+			if node_to_delete.getParent().getRight()==node_to_delete:
+				#set node_to_delete's parent's child as a virtual node
+				node_to_delete.getParent().setRight(node_to_delete.getRight())
+			else:
+				node_to_delete.getParent().setLeft(node_to_delete.getLeft())
+			sum_rotations += self.rotateAndFixSizeField(node_to_delete.getParent())
+		elif node_to_delete.getRight().isRealNode() and node_to_delete.getRight().isRealNode():
+			#two childrens
+			successor_node=self.successor(node_to_delete)
+			sum_rotations+=self.delete(i+1)
+			#putting succesor_node instead of node_to_delete:
+			if node_to_delete.getParent().getRight()==node_to_delete:
+				node_to_delete.getParent().setRight(successor_node)
+			else:
+				node_to_delete.getParent().setLeft(successor_node)
+			successor_node.setRight(node_to_delete.getRight())
+			successor_node.setLeft(node_to_delete.getLeft())
+		elif node_to_delete.getRight().isRealNode(): #right child
+			node_to_delete.getParent().setRight(node_to_delete.getRight())
+			sum_rotations += self.rotateAndFixSizeField(node_to_delete.getParent())
+		elif node_to_delete.getLeft().isRealNode(): #left child
+			node_to_delete.getParent().setLeft(node_to_delete.getLeft())
+			sum_rotations += self.rotateAndFixSizeField(node_to_delete.getParent())
+		self.size-=1
+		return sum_rotations
+
+
+	"""deletes the root from the tree
+
+	@type i: int
+	@pre: 0 <= i < self.length()
+	@param i: The intended index in the list to be deleted
+	@rtype: int
+	@returns: the number of rebalancing operation due to AVL rebalancing
+	"""
+	def deleteRoot(self,i):
+		node_to_delete=self.root
+		if node_to_delete.isLeaf():
+			self.root=None
+		if node_to_delete.getRight().isRealNode() and node_to_delete.getRight().isRealNode():
+			successor_node=self.successor(node_to_delete)
+			sum_rotations=self.delete(i+1)
+			successor_node.setRight(node_to_delete.getRight())
+			successor_node.setLeft(node_to_delete.getLeft())
+		elif node_to_delete.getRight().isRealNode(): #right child
+			self.root=node_to_delete.getRight()
+		elif node_to_delete.getLeft().isRealNode(): #left child
+			self.root=node_to_delete.getLeft()
+		self.root.setParent(None)
+		self.size-=1
+		return sum_rotations
+
 
 	"""returns the biggest node in the tree if called from root
 	@rtype: AVLNode
 	"""
 	def maxNode(self, node):
-		while node.right.isRealNode():
+		while node.getRight().isRealNode():
 			node = node.getRight()
 		return node
 
+	"""returns the smallest node in the tree if called from root
+	@rtype: AVLNode
+	time Complexity: O(log n)
+	"""
+	def minNode (self,node):
+		while node.getLeft().isRealNode():
+			node = node.getLeft()
+		return node
 
 	"""returns the node's left node's most right node
 	@rtype: AVLNode
@@ -401,6 +487,18 @@ class AVLTreeList(object):
 		if node.getLeft().isRealNode():
 			return self.maxNode(node.getLeft())
 
+	"""returns the following node in the list
+	@rtype: AVLNode
+	time complexity: O(log(n))
+	"""
+	def successor(self, node):
+		if node.getRight().isRealNode():
+			return self.minNode(node.getRight())
+		parent = node.getParent()
+		while parent.isRealNode() and node == parent.getRight():
+			node = parent
+			parent = node.getParent()
+		return parent
 
 	"""returns the value of the first item in the list
 
@@ -505,3 +603,17 @@ print(my_tree)
 print(my_tree.insert(1, 7))
 print(my_tree)
 """
+
+print(my_tree.insert(0, 1))
+print(my_tree.insert(1, 2))
+print(my_tree.insert(2, 3))
+print(my_tree.insert(3, 4))
+print(my_tree.insert(4, 5))
+print(my_tree.insert(5, 6))
+print(my_tree.insert(6, 7))
+
+print(my_tree)
+
+my_tree.delete(3)
+print(my_tree)
+
