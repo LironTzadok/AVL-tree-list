@@ -191,7 +191,8 @@ class AVLTreeList(object):
 	def __init__(self):
 		self.size = 0
 		self.root = None
-		# add your fields here
+		self.first = None
+		self.last = None
 
 
 	def __repr__(self):
@@ -221,6 +222,7 @@ class AVLTreeList(object):
 	def retrieve(self, i):
 		return self.treeSelect(self.root, i + 1).getValue()
 
+
 	"""retrieves the i'th item in the list
 
 	@type i: int
@@ -231,6 +233,7 @@ class AVLTreeList(object):
 	"""
 	def retrieveNode(self, i):
 		return self.treeSelect(self.root, i + 1)
+
 
 	"""retrieves the i'th item in the AVL Tree
 
@@ -263,11 +266,14 @@ class AVLTreeList(object):
 	"""
 	def insert(self, i, val):
 		new_node = self.createRealNode(val)
+		if i == 0:
+			self.first = new_node
 		if self.empty():
 			self.root = new_node
 		elif i == self.size:
 			max_node = self.maxNode(self.getRoot())
 			max_node.setRight(new_node)
+			self.last = new_node
 		elif i < self.size:
 			tmp_node = self.treeSelect(self.root, i + 1)
 			# if temp.node has no left child
@@ -396,12 +402,12 @@ class AVLTreeList(object):
 	"""
 
 	def delete(self, i):
-		if i>=self.size:
+		if i >= self.size:
 			return -1
-		node_to_delete=self.retrieveNode(i)
-		if node_to_delete==self.root:
+		node_to_delete = self.retrieveNode(i)
+		if node_to_delete == self.root:
 			return self.deleteRoot(i)
-		sum_rotations=0
+		sum_rotations = 0
 		if node_to_delete.isLeaf():
 			if node_to_delete.getParent().getRight() == node_to_delete:
 				#set node_to_delete's parent's child as a virtual node
@@ -411,11 +417,11 @@ class AVLTreeList(object):
 			sum_rotations += self.rotateAndFixSizeField(node_to_delete)
 		elif node_to_delete.getRight().isRealNode() and node_to_delete.getRight().isRealNode():
 			#two childrens
-			successor_node=self.successor(node_to_delete)
-			sum_rotations+=self.delete(i+1)
-			self.size+=1
+			successor_node = self.successor(node_to_delete)
+			sum_rotations += self.delete(i+1)
+			self.size += 1
 			#putting succesor_node instead of node_to_delete:
-			if node_to_delete.getParent().getRight()==node_to_delete:
+			if node_to_delete.getParent().getRight() == node_to_delete:
 				node_to_delete.getParent().setRight(successor_node)
 			else:
 				node_to_delete.getParent().setLeft(successor_node)
@@ -448,26 +454,26 @@ class AVLTreeList(object):
 	@returns: the number of rebalancing operation due to AVL rebalancing
 	"""
 	def deleteRoot(self,i):
-		node_to_delete=self.root
-		sum_rotations=0
+		node_to_delete = self.root
+		sum_rotations = 0
 		if node_to_delete.isLeaf():
-			self.root=None
+			self.root = None
 		if node_to_delete.getRight().isRealNode() and node_to_delete.getRight().isRealNode():
-			successor_node=self.successor(node_to_delete)
-			sum_rotations=self.delete(i+1)
-			self.size+=1
+			successor_node = self.successor(node_to_delete)
+			sum_rotations = self.delete(i+1)
+			self.size += 1
 			successor_node.setRight(node_to_delete.getRight())
 			successor_node.setLeft(node_to_delete.getLeft())
 			successor_node.setSize(node_to_delete.getSize())
 			successor_node.setHeight(node_to_delete.getHeight())
-			self.root=successor_node
+			self.root = successor_node
 		elif node_to_delete.getRight().isRealNode(): #right child
-			self.root=node_to_delete.getRight()
+			self.root = node_to_delete.getRight()
 		elif node_to_delete.getLeft().isRealNode(): #left child
-			self.root=node_to_delete.getLeft()
+			self.root = node_to_delete.getLeft()
 		if self.root != None:
 			self.root.setParent(None)
-		self.size-=1
+		self.size -= 1
 		return sum_rotations
 
 
@@ -515,17 +521,23 @@ class AVLTreeList(object):
 
 	@rtype: str
 	@returns: the value of the first item, None if the list is empty
+	time complexity: O(1)
 	"""
 	def first(self):
-		return None
+		if self.empty():
+			return None
+		return self.first.getValue()
 
 	"""returns the value of the last item in the list
 
 	@rtype: str
 	@returns: the value of the last item, None if the list is empty
+	time complexity: O(1)
 	"""
 	def last(self):
-		return None
+		if self.empty():
+			return None
+		return self.first.getValue()
 
 	"""returns an array representing list 
 
