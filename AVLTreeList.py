@@ -521,7 +521,7 @@ class AVLTreeList(object):
 
 	@rtype: str
 	@returns: the value of the first item, None if the list is empty
-	time complexity: O(1)
+	time complexity: O(1).
 	"""
 	def first(self):
 		if self.empty():
