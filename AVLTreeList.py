@@ -191,8 +191,8 @@ class AVLTreeList(object):
 	def __init__(self):
 		self.size = 0
 		self.root = None
-		self.first = None
-		self.last = None
+		self.min = None
+		self.max = None
 
 
 	def __repr__(self):
@@ -267,13 +267,13 @@ class AVLTreeList(object):
 	def insert(self, i, val):
 		new_node = self.createRealNode(val)
 		if i == 0:
-			self.first = new_node
+			self.min = new_node
 		if self.empty():
 			self.root = new_node
 		elif i == self.size:
 			max_node = self.maxNode(self.getRoot())
 			max_node.setRight(new_node)
-			self.last = new_node
+			self.max = new_node
 		elif i < self.size:
 			tmp_node = self.treeSelect(self.root, i + 1)
 			# if temp.node has no left child
@@ -400,7 +400,6 @@ class AVLTreeList(object):
 	@rtype: int
 	@returns: the number of rebalancing operation due to AVL rebalancing
 	"""
-
 	def delete(self, i):
 		if i >= self.size:
 			return -1
@@ -442,6 +441,10 @@ class AVLTreeList(object):
 				node_to_delete.getParent().setLeft(node_to_delete.getLeft())
 			sum_rotations += self.rotateAndFixSizeField(node_to_delete)
 		self.size -= 1
+		if(node_to_delete == self.min):
+			self.min = self.minNode(self.root)
+		elif(node_to_delete == self.max):
+			self.max = self.maxNode(self.root)
 		return sum_rotations
 
 
@@ -485,6 +488,7 @@ class AVLTreeList(object):
 			node = node.getRight()
 		return node
 
+
 	"""returns the smallest node in the tree if called from root
 	@rtype: AVLNode
 	time Complexity: O(log n)
@@ -493,6 +497,7 @@ class AVLTreeList(object):
 		while node.getLeft().isRealNode():
 			node = node.getLeft()
 		return node
+
 
 	"""returns the node's left node's most right node
 	@rtype: AVLNode
@@ -503,6 +508,7 @@ class AVLTreeList(object):
 			return None
 		if node.getLeft().isRealNode():
 			return self.maxNode(node.getLeft())
+
 
 	"""returns the following node in the list
 	@rtype: AVLNode
@@ -517,6 +523,7 @@ class AVLTreeList(object):
 			parent = node.getParent()
 		return parent
 
+
 	"""returns the value of the first item in the list
 
 	@rtype: str
@@ -526,7 +533,8 @@ class AVLTreeList(object):
 	def first(self):
 		if self.empty():
 			return None
-		return self.first.getValue()
+		return self.min.getValue()
+
 
 	"""returns the value of the last item in the list
 
@@ -537,23 +545,43 @@ class AVLTreeList(object):
 	def last(self):
 		if self.empty():
 			return None
-		return self.first.getValue()
+		return self.max.getValue()
+
 
 	"""returns an array representing list 
 
 	@rtype: list
 	@returns: a list of strings representing the data structure
+	time complexity: O(n)
 	"""
 	def listToArray(self):
-		return None
+		array = []
+		return self.inOrder(self.root, array)
+
+
+	"""goes throw all the nodes of the tree "in order" and adds them to a given array
+
+	@rtype: array
+	@returns: an array of strings representing the data structure
+	time complexity: O(n)
+	"""
+	def inOrder(self, node, array):
+		if(node.isRealNode()):
+			self.inOrder(node.getLeft(), array)
+			array.append(node.getValue())
+			self.inOrder(node.getRight(), array)
+		return array
+
 
 	"""returns the size of the list 
 
 	@rtype: int
 	@returns: the size of the list
+	time complexity: O(1)
 	"""
 	def length(self):
-		return None
+		return self.size
+
 
 	"""sort the info values of the list
 
@@ -563,6 +591,7 @@ class AVLTreeList(object):
 	def sort(self):
 		return None
 
+
 	"""permute the info values of the list 
 
 	@rtype: list
@@ -570,6 +599,7 @@ class AVLTreeList(object):
 	"""
 	def permutation(self):
 		return None
+
 
 	"""concatenates lst to self
 
@@ -580,6 +610,7 @@ class AVLTreeList(object):
 	"""
 	def concat(self, lst):
 		return None
+
 
 	"""searches for a *value* in the list
 
@@ -602,3 +633,14 @@ class AVLTreeList(object):
 
 
 my_tree = AVLTreeList()
+my_tree.insert(0,1)
+my_tree.insert(1,2)
+my_tree.insert(2,3)
+my_tree.insert(3,4)
+print(my_tree.listToArray())
+my_tree.delete(3)
+print(my_tree.listToArray())
+my_tree.insert(3,5)
+print(my_tree.listToArray())
+my_tree.insert(3,7)
+print(my_tree.listToArray())
