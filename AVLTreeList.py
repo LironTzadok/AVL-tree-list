@@ -602,7 +602,6 @@ class AVLTreeList(object):
 	def permutation(self):
 		list = self.listToArray()
 		shuffled_list = self.shuffleList(list)
-		print(shuffled_list)
 		shuffled_AVL = self.makeAVLOutOfAList(shuffled_list)
 		return shuffled_AVL
 
@@ -675,9 +674,52 @@ class AVLTreeList(object):
 	@param lst: a list to be concatenated after self
 	@rtype: int
 	@returns: the absolute value of the difference between the height of the AVL trees joined
+	time complexity:O(log n)
 	"""
 	def concat(self, lst):
-		return None
+		if lst.empty():
+			return self.root.getHeight()
+		if self.empty():
+			return lst.getRoot().getHeight()
+		if self.root.getHeight()>lst.getRoot().getHeight():
+			T1=lst.getRoot()
+			T2=self.root
+		else:
+			T1=self.root
+			T2=lst.getRoot()
+		height_difference= abs(T1.getHeight()-T2.getHeight())
+		x=T1.last()
+		T1.delete(T1.getRoot().getSize()-1)
+		joined_tree=self.join(T1,T2,x)
+		self.root=joined_tree.getRoot()
+		self.max=self.maxNode(self.root)
+		self.min=self.minNode(self.root)
+		self.size=self.root.getSize()
+		return height_difference
+
+
+	"""joining T1,T2 into one tree, given a node x such that T1<x<T2
+
+	@type T1: AVLTreeList
+	@type T2: AVLTreeList
+	@type x: AVLNode
+	@param T1: a tree to be joined with T2
+	@param T2: a tree to be joined with T1
+	@rtype: AVLTreeList
+	@returns: a joined tree from two given trees
+	time complexity:O(log n)
+	"""
+	def join(self,T1,T2,x):
+		h=T1.getHeight()
+		b=T2
+		while b.getHeight>h:
+			b=b.getLeft()
+		x.setLeft(T1)
+		c=b.getParent()
+		x.setRight(b)
+		c.setLeft(x)
+		self.rotateAndFixSizeField(x)
+		return T2
 
 
 	"""searches for a *value* in the list
