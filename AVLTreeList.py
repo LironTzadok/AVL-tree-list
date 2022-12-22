@@ -4,6 +4,7 @@
 #id2      - 208005835
 #name2    - Liron Tzadok
 from printree import *
+import random
 
 """A class represnting a node in an AVL tree"""
 
@@ -548,7 +549,7 @@ class AVLTreeList(object):
 		return self.max.getValue()
 
 
-	"""returns an array representing list 
+	"""returns an list representing list 
 
 	@rtype: list
 	@returns: a list of strings representing the data structure
@@ -559,10 +560,10 @@ class AVLTreeList(object):
 		return self.inOrder(self.root, array)
 
 
-	"""goes throw all the nodes of the tree "in order" and adds them to a given array
+	"""goes throw all the nodes of the tree "in order" and adds them to a given list
 
-	@rtype: array
-	@returns: an array of strings representing the data structure
+	@rtype: list
+	@returns: a list of strings representing the data structure
 	time complexity: O(n)
 	"""
 	def inOrder(self, node, array):
@@ -594,11 +595,73 @@ class AVLTreeList(object):
 
 	"""permute the info values of the list 
 
-	@rtype: list
+	@rtype: AVLTreeList
 	@returns: an AVLTreeList where the values are permuted randomly by the info of the original list. ##Use Randomness
+	time complexity:O(n)
 	"""
 	def permutation(self):
-		return None
+		list = self.listToArray()
+		shuffled_list = self.shuffleList(list)
+		shuffled_AVL = self.makeAVLOutOfAList(shuffled_list)
+		return shuffled_AVL
+
+
+	"""shuffles a list
+
+	@rtype: list
+	@returns: a list where the values are permuted randomly by the info of the original list. ##Use Randomness
+	time complexity:O(n)
+	"""
+	def shuffleList(self, list):
+		for i in range(len(list) - 1, 0, -1):
+			# Pick a random index from 0 to i
+			j = random.randint(0, i)
+			# swap
+			temp = list[i]
+			list[i] = list[j]
+			list[j] = temp
+		return list
+
+
+	""" makes an AVLTreeList from a given list
+
+	@rtype: AVLTreeList
+	@returns: an AVLTreeList that nodes in it are ordered by their index in the given list
+	time complexity:O(n)
+	"""
+	def makeAVLOutOfAList(self, list):
+		shuffled_tree = AVLTreeList()
+		mid = (len(list)) // 2
+		shuffled_tree.root = self.createRealNode(list[mid])
+		shuffled_tree.root.setLeft(self.AVLOutOfAListInner(list, 0, mid - 1, shuffled_tree))
+		shuffled_tree.root.setRight(self.AVLOutOfAListInner(list, mid + 1, len(list) - 1, shuffled_tree))
+		shuffled_tree.size = len(list)
+		return shuffled_tree
+
+
+	""" creates a subtree from a given list
+
+	@rtype: AVLNode
+	@returns: an AVLNode with the value of the list[middle of start + end]. the AVLNode left's child is an AVL subtree
+	made of the left side of the array (from middle index to 0 index) the right child is an AVL subtree made of the 
+	right side of the array(from middle index to list.len()-1 index)
+	time complexity:O(n)
+	"""
+	def AVLOutOfAListInner(self, list, start, end, tree):
+		if start > end:
+			return AVLNode(None)
+		else:
+			mid = start + (end - start) // 2
+			new_node = self.createRealNode(list[mid])
+			new_node.setLeft(self.AVLOutOfAListInner(list, start, mid - 1, tree))
+			new_node.setRight(self.AVLOutOfAListInner(list, mid + 1, end, tree))
+			# if new_new node is the first node in the list make it the min of the tree
+			if start == 0 and end == 0:
+				tree.min = new_node
+			# if new_new node is the last node in the list make it the max of the tree
+			elif start == len(list) - 1 and end == len(list) - 1:
+				tree.max = new_node
+		return new_node
 
 
 	"""concatenates lst to self
@@ -637,10 +700,5 @@ my_tree.insert(0,1)
 my_tree.insert(1,2)
 my_tree.insert(2,3)
 my_tree.insert(3,4)
-print(my_tree.listToArray())
-my_tree.delete(3)
-print(my_tree.listToArray())
-my_tree.insert(3,5)
-print(my_tree.listToArray())
-my_tree.insert(3,7)
-print(my_tree.listToArray())
+my_tree.insert(4,5)
+print(my_tree.permutation())
