@@ -602,6 +602,7 @@ class AVLTreeList(object):
 	def permutation(self):
 		list = self.listToArray()
 		shuffled_list = self.shuffleList(list)
+		print(shuffled_list)
 		shuffled_AVL = self.makeAVLOutOfAList(shuffled_list)
 		return shuffled_AVL
 
@@ -635,6 +636,8 @@ class AVLTreeList(object):
 		shuffled_tree.root = self.createRealNode(list[mid])
 		shuffled_tree.root.setLeft(self.AVLOutOfAListInner(list, 0, mid - 1, shuffled_tree))
 		shuffled_tree.root.setRight(self.AVLOutOfAListInner(list, mid + 1, len(list) - 1, shuffled_tree))
+		shuffled_tree.root.setSize(shuffled_tree.root.getLeft().getSize() + shuffled_tree.root.getRight().getSize() + 1)
+		shuffled_tree.root.setHeight(max(shuffled_tree.root.getLeft().getHeight(), shuffled_tree.root.getRight().getHeight()) + 1)
 		shuffled_tree.size = len(list)
 		return shuffled_tree
 
@@ -655,11 +658,13 @@ class AVLTreeList(object):
 			new_node = self.createRealNode(list[mid])
 			new_node.setLeft(self.AVLOutOfAListInner(list, start, mid - 1, tree))
 			new_node.setRight(self.AVLOutOfAListInner(list, mid + 1, end, tree))
+			new_node.setSize(new_node.getLeft().getSize() + new_node.getRight().getSize() + 1)
+			new_node.setHeight(max(new_node.getLeft().getHeight(), new_node.getRight().getHeight()) + 1)
 			# if new_new node is the first node in the list make it the min of the tree
-			if start == 0 and end == 0:
+			if mid == 0:
 				tree.min = new_node
 			# if new_new node is the last node in the list make it the max of the tree
-			elif start == len(list) - 1 and end == len(list) - 1:
+			elif mid == len(list) - 1:
 				tree.max = new_node
 		return new_node
 
@@ -701,4 +706,7 @@ my_tree.insert(1,2)
 my_tree.insert(2,3)
 my_tree.insert(3,4)
 my_tree.insert(4,5)
-print(my_tree.permutation())
+shuffled_tree = my_tree.permutation()
+print(shuffled_tree)
+print(shuffled_tree.first())
+print(shuffled_tree.last())
