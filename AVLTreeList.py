@@ -585,10 +585,10 @@ class AVLTreeList(object):
 	time complexity: O(log n)
 	"""
 	def successor(self, node):
-		if node.getRight().isRealNode():
+		if node.getRight() != None and node.getRight().isRealNode():
 			return self.minNode(node.getRight())
 		parent = node.getParent()
-		while parent.isRealNode() and node == parent.getRight():
+		while parent !=None and parent.isRealNode() and node == parent.getRight():
 			node = parent
 			parent = node.getParent()
 		return parent
@@ -847,9 +847,19 @@ class AVLTreeList(object):
 	@param val: a value to be searched
 	@rtype: int
 	@returns: the first index that contains val, -1 if not found.
+	@time complexity: O(n)
 	"""
 	def search(self, val):
-		return None
+		if self.empty():
+			return -1
+		node=self.min
+		index=0
+		while node != None and node.isRealNode() and node.getValue()!=val:
+			index+=1
+			node=self.successor(node)
+		if node != None and node.isRealNode() and node.getValue()==val:
+			return index
+		return -1
 
 
 	"""returns the root of the tree representing the list
@@ -863,9 +873,14 @@ class AVLTreeList(object):
 
 my_tree = AVLTreeList()
 my_tree.insert(0,"a")
-my_tree.insert(1,"b")
-my_tree.insert(2,"c")
-other_tree = AVLTreeList()
+"""my_tree.insert(1,"b")
+my_tree.insert(2,"c")"""
+
+print(my_tree)
+
+print(my_tree.search("a"))
+
+"""other_tree = AVLTreeList()
 other_tree.insert(0,"d")
 other_tree.insert(1,"e")
 other_tree.insert(2,"f")
@@ -873,8 +888,8 @@ other_tree.insert(3,"g")
 other_tree.insert(4,"h")
 other_tree.insert(5,"i")
 
-other_tree.concat(my_tree)
-print(my_tree)
+other_tree.concat(my_tree)"""
+
 
 """my_tree.insert(1,4)
 my_tree.insert(3,7)
