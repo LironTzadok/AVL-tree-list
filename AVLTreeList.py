@@ -207,6 +207,7 @@ class AVLTreeList(object):
 
 	@rtype: bool
 	@returns: True if the list is empty, False otherwise
+	time complexity: O(1)
 	"""
 	def empty(self):
 		return self.size == 0
@@ -219,6 +220,7 @@ class AVLTreeList(object):
 	@param i: index in the list
 	@rtype: str
 	@returns: the the value of the i'th item in the list
+	time complexity: O(log n)
 	"""
 	def retrieve(self, i):
 		return self.treeSelect(self.root, i + 1).getValue()
@@ -231,18 +233,21 @@ class AVLTreeList(object):
 	@param i: index in the list
 	@rtype: AVLNode
 	@returns: the i'th item in the list
+	time complexity: O(log n)
 	"""
 	def retrieveNode(self, i):
 		return self.treeSelect(self.root, i + 1)
 
 
-	"""retrieves the i'th item in the AVL Tree
+	"""retrieves the i'th item in the AVL Tree such that node is it's root
 
 	@type i: int
+	@type node: AVLNode
 	@pre: 0 <= i < self.length()
 	@param i: Rank in the Tree
 	@rtype: AVLNode
-	@returns: the i'th item in the tree
+	@returns: the i'th item in the tree such that node is it's root
+	time complexity: O(log n)
 	"""
 	def treeSelect(self, node, i):
 		if i > node.getSize():
@@ -262,8 +267,9 @@ class AVLTreeList(object):
 	@param i: The intended index in the list to which we insert val
 	@type val: str
 	@param val: the value we inserts
-	@rtype: list
+	@rtype: int
 	@returns: the number of rebalancing operation due to AVL rebalancing
+	time complexity: O(log n)
 	"""
 	def insert(self, i, val):
 		new_node = self.createRealNode(val)
@@ -271,9 +277,10 @@ class AVLTreeList(object):
 			self.min = new_node
 		if self.empty():
 			self.root = new_node
+			self.max=new_node
+			self.min=new_node
 		elif i == self.size:
-			max_node = self.maxNode(self.getRoot())
-			max_node.setRight(new_node)
+			self.max.setRight(new_node)
 			self.max = new_node
 		elif i < self.size:
 			tmp_node = self.treeSelect(self.root, i + 1)
@@ -287,7 +294,14 @@ class AVLTreeList(object):
 		self.size += 1
 		return sum_rotations
 
+	"""fixes height and size fields after insert / delete / concat, using rotations
 
+	@type node_inserted: AVLNode
+	@param node_inserted: the beginning node in the chain of rebalancing operations
+	@rtype: int
+	@returns: the number of rebalancing operation due to AVL rebalancing
+	time complexity: O(log n)
+	"""
 	def rotateAndFixSizeField(self, node_inserted):
 		y = node_inserted.getParent()
 		sum_rotations = 0
@@ -323,7 +337,16 @@ class AVLTreeList(object):
 			y = y.getParent()
 		return sum_rotations
 
+	"""performs a right rotation on node
 
+	@type node: AVLNode
+	@param node: the node who's BF is not legal (not 1,0,-1)
+	@type isRoot: boolean
+	@param isRoot: True if node is a root, False otherwise
+	@type isRightChild: boolean
+	@param isRightChild: True if node is a right child, False otherwise
+	time complexity: O(1)
+	"""
 	def rightRotate(self, node, isRoot, isRightChild = False):
 		z = node
 		y = node.getLeft()
@@ -343,7 +366,16 @@ class AVLTreeList(object):
 		z.setHeight(max(z.getLeft().getHeight(), z.getRight().getHeight()) + 1)
 		y.setHeight(max(y.getLeft().getHeight(), y.getRight().getHeight()) + 1)
 
+	"""performs a left rotation on node
 
+	@type node: AVLNode
+	@param node: the node who's BF is not legal (not 1,0,-1)
+	@type isRoot: boolean
+	@param isRoot: True if node is a root, False otherwise
+	@type isRightChild: boolean
+	@param isRightChild: True if node is a right child, False otherwise
+	time complexity: O(1)
+	"""
 	def leftRotate(self, node, isRoot, isLeftChild = False):
 		z = node
 		y = node.getRight()
@@ -363,7 +395,12 @@ class AVLTreeList(object):
 		z.setHeight(max(z.getLeft().getHeight(), z.getRight().getHeight()) + 1)
 		y.setHeight(max(y.getLeft().getHeight(), y.getRight().getHeight()) + 1)
 
+	"""performs a "right then left" rotation on node
 
+	@type node: AVLNode
+	@param node: the node who's BF is not legal (not 1,0,-1)
+	time complexity: O(1)
+	"""
 	def rightLeftRotate(self, node):
 		self.rightRotate(node.getRight(), False, True)
 		# if node is not the root
@@ -372,7 +409,12 @@ class AVLTreeList(object):
 		else:
 			self.leftRotate(node, True)
 
+	"""performs a "left then right" rotation on node
 
+	@type node: AVLNode
+	@param node: the node who's BF is not legal (not 1,0,-1)
+	time complexity: O(1)
+	"""
 	def leftRightRotate(self, node):
 		self.leftRotate(node.getLeft(), False, True)
 		# if node is not the root
@@ -382,6 +424,13 @@ class AVLTreeList(object):
 			self.rightRotate(node, True)
 
 
+	"""creates a real (non virtual) AVLNode
+
+	@type val: str
+	@rtype: AVLNode
+	@returns: a new AVLNode with value val
+	time complexity: O(1)
+	"""
 	def createRealNode(self, val):
 		new_node = AVLNode(val)
 		new_node.setHeight(0)
@@ -400,6 +449,7 @@ class AVLTreeList(object):
 	@param i: The intended index in the list to be deleted
 	@rtype: int
 	@returns: the number of rebalancing operation due to AVL rebalancing
+	time complexity: O(log n)
 	"""
 	def delete(self, i):
 		if i >= self.size:
@@ -441,6 +491,7 @@ class AVLTreeList(object):
 			else:
 				node_to_delete.getParent().setLeft(node_to_delete.getLeft())
 			sum_rotations += self.rotateAndFixSizeField(node_to_delete)
+		node_to_delete.setParent(None)
 		self.size -= 1
 		if(node_to_delete == self.min):
 			self.min = self.minNode(self.root)
@@ -456,6 +507,7 @@ class AVLTreeList(object):
 	@param i: The intended index in the list to be deleted
 	@rtype: int
 	@returns: the number of rebalancing operation due to AVL rebalancing
+	time complexity: O(log n)
 	"""
 	def deleteRoot(self,i):
 		node_to_delete = self.root
@@ -481,8 +533,13 @@ class AVLTreeList(object):
 		return sum_rotations
 
 
-	"""returns the biggest node in the tree if called from root
+	"""returns the biggest node in the tree if called from root.
+	
+	@type node: AVLNode
+	@param node: the root of the subtree 
 	@rtype: AVLNode
+	@returns: returns the biggest node in the subtree of node. if node is the root, then returns the biggest node in the tree
+	time complexity: O(log n)
 	"""
 	def maxNode(self, node):
 		while node.getRight().isRealNode():
@@ -490,9 +547,13 @@ class AVLTreeList(object):
 		return node
 
 
-	"""returns the smallest node in the tree if called from root
+	"""returns the smallest node in the tree if called from root.
+	
+	@type node: AVLNode
+	@param node: the root of the subtree 
 	@rtype: AVLNode
-	time Complexity: O(log n)
+	@returns: returns the smallest node in the subtree of node. if node is the root, then returns the smallest node in the tree
+	time complexity: O(log n)
 	"""
 	def minNode (self,node):
 		while node.getLeft().isRealNode():
@@ -500,8 +561,13 @@ class AVLTreeList(object):
 		return node
 
 
-	"""returns the node's left node's most right node
+	"""returns the predecessor of node, in case node has a left child
+	@type node: AVLNode
+	@pre: node.getLeft() != None
+	@param node: a node to calculate predecessor from
 	@rtype: AVLNode
+	@returns: the predecessor of node
+	time complexity: O(log n)
 	"""
 	def predecessor(self, node):
 		# method implements only "go left then all the way right" case for insertion.
@@ -511,9 +577,12 @@ class AVLTreeList(object):
 			return self.maxNode(node.getLeft())
 
 
-	"""returns the following node in the list
+	"""returns the sucessor of node
+	@type node: AVLNode
+	@param node: a node to calculate sucessor to
 	@rtype: AVLNode
-	time complexity: O(log(n))
+	@returns: the sucessor of node
+	time complexity: O(log n)
 	"""
 	def successor(self, node):
 		if node.getRight().isRealNode():
@@ -549,10 +618,10 @@ class AVLTreeList(object):
 		return self.max.getValue()
 
 
-	"""returns an list representing list 
+	"""returns an array representing the list 
 
-	@rtype: list
-	@returns: a list of strings representing the data structure
+	@rtype: array
+	@returns: an array of strings representing the data structure
 	time complexity: O(n)
 	"""
 	def listToArray(self):
@@ -560,10 +629,14 @@ class AVLTreeList(object):
 		return self.inOrder(self.root, array)
 
 
-	"""goes throw all the nodes of the tree "in order" and adds them to a given list
+	"""scans the tree "in order" and adds each value to a given array
 
-	@rtype: list
-	@returns: a list of strings representing the data structure
+	@type node: AVLNode
+	@param node: a root of an AVLTreeList
+	@type array: array
+	@param array: an array that will contain all the values in the tree
+	@rtype: array
+	@returns: an array of strings representing the data structure
 	time complexity: O(n)
 	"""
 	def inOrder(self, node, array):
@@ -586,12 +659,54 @@ class AVLTreeList(object):
 
 	"""sort the info values of the list
 
-	@rtype: list
+	@rtype: AVLTreeList
 	@returns: an AVLTreeList where the values are sorted by the info of the original list.
+	time complexity: O(n*log n)
 	"""
 	def sort(self):
-		return None
+		list=self.listToArray()
+		sorted_list = self.mergeSort(list)
+		sorted_AVL = self.makeAVLOutOfAList(sorted_list)
+		return sorted_AVL
 
+	"""sorts an array of values
+
+	@rtype: array
+	@returns: an array of string values sorted by lexicographic order
+	time complexity: O(n*log n)
+	"""
+	def mergeSort(self, list):
+		n=len(list)
+		if n<=1:
+			return list
+		return self.merge(self.mergeSort(list[0:n//2]), self.mergeSort(list[n//2:n]))
+
+	"""merges two sorted arrays into one sorted array
+
+	@type list1: array
+	@param list1: a sorted array at size n
+	@type list2: array
+	@param list2: a sorted array at size m
+	@pre: both list1 and list2 are sorted
+	@rtype: array
+	@returns: a merged sorted array at size m+n
+	time complexity: O(m+n)
+	"""
+	def merge(self, list1, list2):
+		n = len(list1)
+		m = len(list2)
+		merged_list = [0 for i in range(n+m)]
+		a=0; b=0; c=0
+		while  a<n  and  b<m:
+			if list1[a] < list2[b]:
+				merged_list[c] = list1[a]
+				a+=1
+			else:
+				merged_list[c] = list2[b]
+				b+=1
+			c+=1
+		merged_list[c:] = list1[a:] + list2[b:]
+		return merged_list
 
 	"""permute the info values of the list 
 
@@ -659,10 +774,10 @@ class AVLTreeList(object):
 			new_node.setRight(self.AVLOutOfAListInner(list, mid + 1, end, tree))
 			new_node.setSize(new_node.getLeft().getSize() + new_node.getRight().getSize() + 1)
 			new_node.setHeight(max(new_node.getLeft().getHeight(), new_node.getRight().getHeight()) + 1)
-			# if new_new node is the first node in the list make it the min of the tree
+			# if new_node is the first node in the list make it the min of the tree
 			if mid == 0:
 				tree.min = new_node
-			# if new_new node is the last node in the list make it the max of the tree
+			# if new_node is the last node in the list make it the max of the tree
 			elif mid == len(list) - 1:
 				tree.max = new_node
 		return new_node
@@ -682,16 +797,16 @@ class AVLTreeList(object):
 		if self.empty():
 			return lst.getRoot().getHeight()
 		if self.root.getHeight()>lst.getRoot().getHeight():
-			T1=lst.getRoot()
-			T2=self.root
+			T1=lst
+			T2=self
 		else:
-			T1=self.root
-			T2=lst.getRoot()
-		height_difference= abs(T1.getHeight()-T2.getHeight())
-		x=T1.last()
-		T1.delete(T1.getRoot().getSize()-1)
+			T1=self
+			T2=lst
+		height_difference= abs(T1.getRoot().getHeight()-T2.getRoot().getHeight())
+		x=T1.max
+		T1.delete(T1.size-1) #delete x from T1
 		joined_tree=self.join(T1,T2,x)
-		self.root=joined_tree.getRoot()
+		self.root=joined_tree
 		self.max=self.maxNode(self.root)
 		self.min=self.minNode(self.root)
 		self.size=self.root.getSize()
@@ -706,20 +821,24 @@ class AVLTreeList(object):
 	@param T1: a tree to be joined with T2
 	@param T2: a tree to be joined with T1
 	@rtype: AVLTreeList
-	@returns: a joined tree from two given trees
+	@returns: the root of a joined tree from two given trees
 	time complexity:O(log n)
 	"""
 	def join(self,T1,T2,x):
-		h=T1.getHeight()
-		b=T2
-		while b.getHeight>h:
+		h=T1.getRoot().getHeight()
+		b=T2.getRoot()
+		while b.getHeight()>h:
 			b=b.getLeft()
-		x.setLeft(T1)
-		c=b.getParent()
-		x.setRight(b)
-		c.setLeft(x)
-		self.rotateAndFixSizeField(x)
-		return T2
+		x.setLeft(T1.getRoot())
+		if b.getParent()!=None:
+			c=b.getParent()
+			c.setLeft(x)
+			x.setRight(b)
+			self.rotateAndFixSizeField(x)
+			return T2.getRoot()
+		else:
+			x.setRight(b)
+			return x
 
 
 	"""searches for a *value* in the list
@@ -736,19 +855,31 @@ class AVLTreeList(object):
 	"""returns the root of the tree representing the list
 
 	@rtype: AVLNode
-	@returns: the root, None if the list is empty
+	@returns: the root of the tree, or None if the list is empty
 	"""
 	def getRoot(self):
 		return self.root
 
 
 my_tree = AVLTreeList()
-my_tree.insert(0,1)
-my_tree.insert(1,2)
-my_tree.insert(2,3)
-my_tree.insert(3,4)
-my_tree.insert(4,5)
-shuffled_tree = my_tree.permutation()
-print(shuffled_tree)
-print(shuffled_tree.first())
-print(shuffled_tree.last())
+my_tree.insert(0,"a")
+my_tree.insert(1,"b")
+my_tree.insert(2,"c")
+other_tree = AVLTreeList()
+other_tree.insert(0,"d")
+other_tree.insert(1,"e")
+other_tree.insert(2,"f")
+other_tree.insert(3,"g")
+other_tree.insert(4,"h")
+other_tree.insert(5,"i")
+
+other_tree.concat(my_tree)
+print(my_tree)
+
+"""my_tree.insert(1,4)
+my_tree.insert(3,7)
+my_tree.insert(0,6)
+my_tree.insert(2,9)
+my_tree.insert(0,8)"""
+
+
