@@ -521,11 +521,15 @@ class AVLTreeList(object):
 			successor_node = self.successor(node_to_delete)
 			sum_rotations = self.delete(i+1)
 			self.size += 1
+			if node_to_delete.getParent().getRight() == node_to_delete:
+				node_to_delete.getParent().setRight(successor_node)
+			else:
+				node_to_delete.getParent().setLeft(successor_node)
 			successor_node.setRight(node_to_delete.getRight())
 			successor_node.setLeft(node_to_delete.getLeft())
 			successor_node.setSize(node_to_delete.getSize())
 			successor_node.setHeight(node_to_delete.getHeight())
-			self.root = successor_node
+			#self.root = successor_node
 		elif node_to_delete.getRight().isRealNode(): #right child
 			self.root = node_to_delete.getRight()
 		elif node_to_delete.getLeft().isRealNode(): #left child
@@ -894,9 +898,9 @@ my_tree.insert(2,"1")
 my_tree.insert(3,"1")
 my_tree.insert(0,"7")
 my_tree.delete(4)
-
+#print(my_tree)
 my_tree.delete(2)
-print(my_tree)
+#print(my_tree)
 
 
 
