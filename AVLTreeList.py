@@ -904,37 +904,30 @@ my_tree.concat(other_tree)
 print(other_tree) #other_tree changes and its not suppose to
 """
 
-"""my_tree = AVLTreeList()
+my_tree = AVLTreeList()
 my_tree.insert(0,"a")
 my_tree.insert(1,"b")
 my_tree.insert(2,"c")
 my_tree.insert(3,"d")
 my_tree.insert(4,"e")
 my_tree.insert(5,"f")
+my_tree.insert(6,"g")
+my_tree.insert(7,"h")
+my_tree.insert(8,"i")
+my_tree.insert(9,"j")
 
 print(my_tree)
 
 other_tree = AVLTreeList()
-other_tree.insert(0,"g")
-other_tree.insert(1,"h")
-other_tree.insert(2,"i")
-other_tree.insert(3,"j")
-other_tree.insert(4,"k")
-other_tree.insert(5,"l")
-
-print(other_tree)
+other_tree.insert(0,"k")
+other_tree.insert(1,"l")
+other_tree.insert(2,"m")
+other_tree.insert(3,"n")
+other_tree.insert(4,"o")
+other_tree.insert(5,"p")
 
 my_tree.concat(other_tree)
 
-print(my_tree)"""
-
-"""my_tree.insert(1,4)
-my_tree.insert(3,7)
-my_tree.insert(0,6)
-my_tree.insert(2,9)
-my_tree.insert(0,8)"""
-
-my_tree = AVLTreeList()
-other_tree = AVLTreeList()
-my_tree.concat(other_tree)
 print(my_tree)
+
+
