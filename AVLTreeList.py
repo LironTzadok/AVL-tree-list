@@ -797,9 +797,9 @@ class AVLTreeList(object):
 		if self.empty():
 			self.root = lst.getRoot()
 			return lst.getRoot().getHeight()
-		height_difference = abs(T1.getRoot().getHeight()-T2.getRoot().getHeight())
+		height_difference = abs(self.getRoot().getHeight()-lst.getRoot().getHeight())
 		x = self.max
-		self.delete(T1.size - 1)
+		self.delete(self.size - 1)
 		joined_tree = self.join(self, lst, x)
 		self.root = joined_tree
 		self.max = self.maxNode(self.root)
