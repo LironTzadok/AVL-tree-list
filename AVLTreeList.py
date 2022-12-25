@@ -468,16 +468,17 @@ class AVLTreeList(object):
 			else:
 				node_to_delete.getParent().setLeft(node_to_delete.getLeft())
 			sum_rotations += self.rotateAndFixSizeField(node_to_delete)
-		elif node_to_delete.getRight().isRealNode() and node_to_delete.getRight().isRealNode():
+		elif node_to_delete.getRight().isRealNode() and node_to_delete.getLeft().isRealNode():
 			#two childrens
 			successor_node = self.successor(node_to_delete)
 			sum_rotations += self.delete(i+1)
 			self.size += 1
 			#putting succesor_node instead of node_to_delete:
-			if node_to_delete.getParent().getRight() == node_to_delete:
-				node_to_delete.getParent().setRight(successor_node)
-			else:
-				node_to_delete.getParent().setLeft(successor_node)
+			if node_to_delete.getParent() is not None:
+				if node_to_delete.getParent().getRight() == node_to_delete:
+					node_to_delete.getParent().setRight(successor_node)
+				else:
+					node_to_delete.getParent().setLeft(successor_node)
 			successor_node.setRight(node_to_delete.getRight())
 			successor_node.setLeft(node_to_delete.getLeft())
 			successor_node.setSize(node_to_delete.getSize())
@@ -517,14 +518,15 @@ class AVLTreeList(object):
 		sum_rotations = 0
 		if node_to_delete.isLeaf():
 			self.root = None
-		if node_to_delete.getRight().isRealNode() and node_to_delete.getRight().isRealNode():
+		if node_to_delete.getRight().isRealNode() and node_to_delete.getLeft().isRealNode():
 			successor_node = self.successor(node_to_delete)
 			sum_rotations = self.delete(i+1)
 			self.size += 1
-			if node_to_delete.getParent().getRight() == node_to_delete:
-				node_to_delete.getParent().setRight(successor_node)
-			else:
-				node_to_delete.getParent().setLeft(successor_node)
+			if node_to_delete.getParent() is not None:
+				if node_to_delete.getParent().getRight() == node_to_delete:
+					node_to_delete.getParent().setRight(successor_node)
+				else:
+					node_to_delete.getParent().setLeft(successor_node)
 			successor_node.setRight(node_to_delete.getRight())
 			successor_node.setLeft(node_to_delete.getLeft())
 			successor_node.setSize(node_to_delete.getSize())
@@ -890,8 +892,14 @@ class AVLTreeList(object):
 	def getRoot(self):
 		return self.root
 
-
 my_tree = AVLTreeList()
+my_tree.insert(0,"1")
+my_tree.insert(1,"0")
+print(my_tree)
+my_tree.delete(0)
+
+
+"""my_tree = AVLTreeList()
 my_tree.insert(0,"4")
 my_tree.insert(1,"6")
 my_tree.insert(2,"1")
@@ -900,7 +908,7 @@ my_tree.insert(0,"7")
 my_tree.delete(4)
 #print(my_tree)
 my_tree.delete(2)
-#print(my_tree)
+#print(my_tree)"""
 
 
 
@@ -948,6 +956,8 @@ my_tree.concat(other_tree)
 
 print(my_tree)
 """
+
+
 
 
 
