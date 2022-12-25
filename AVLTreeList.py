@@ -462,11 +462,12 @@ class AVLTreeList(object):
 			return self.deleteRoot(i)
 		sum_rotations = 0
 		if node_to_delete.isLeaf():
-			if node_to_delete.getParent().getRight() == node_to_delete:
-				#set node_to_delete's parent's child as a virtual node
-				node_to_delete.getParent().setRight(node_to_delete.getRight())
-			else:
-				node_to_delete.getParent().setLeft(node_to_delete.getLeft())
+			if node_to_delete.getParent() is not None:
+				if node_to_delete.getParent().getRight() == node_to_delete:
+					#set node_to_delete's parent's child as a virtual node
+					node_to_delete.getParent().setRight(node_to_delete.getRight())
+				else:
+					node_to_delete.getParent().setLeft(node_to_delete.getLeft())
 			sum_rotations += self.rotateAndFixSizeField(node_to_delete)
 		elif node_to_delete.getRight().isRealNode() and node_to_delete.getLeft().isRealNode():
 			#two childrens
