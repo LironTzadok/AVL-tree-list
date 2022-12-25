@@ -898,7 +898,6 @@ class testAVLList(unittest.TestCase):
             else:
                 T.delete(T.length()//2)
             self.in_order(T, T.getRoot(), self.check_BF)
-
     ###TESTING SEARCH###
 
     def test_search_basic(self):
