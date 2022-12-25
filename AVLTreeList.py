@@ -795,21 +795,16 @@ class AVLTreeList(object):
 		if lst.empty():
 			return self.root.getHeight()
 		if self.empty():
+			self.root = lst.getRoot()
 			return lst.getRoot().getHeight()
-		if self.root.getHeight()>lst.getRoot().getHeight():
-			T1=lst
-			T2=self
-		else:
-			T1=self
-			T2=lst
-		height_difference= abs(T1.getRoot().getHeight()-T2.getRoot().getHeight())
-		x=T1.max
-		T1.delete(T1.size-1) #delete x from T1
-		joined_tree=self.join(T1,T2,x)
-		self.root=joined_tree
-		self.max=self.maxNode(self.root)
-		self.min=self.minNode(self.root)
-		self.size=self.root.getSize()
+		height_difference = abs(T1.getRoot().getHeight()-T2.getRoot().getHeight())
+		x = self.max
+		self.delete(T1.size - 1)
+		joined_tree = self.join(self, lst, x)
+		self.root = joined_tree
+		self.max = self.maxNode(self.root)
+		self.min = self.minNode(self.root)
+		self.size = self.root.getSize()
 		return height_difference
 
 
@@ -824,21 +819,35 @@ class AVLTreeList(object):
 	@returns: the root of a joined tree from two given trees
 	time complexity:O(log n)
 	"""
-	def join(self,T1,T2,x):
-		h=T1.getRoot().getHeight()
-		b=T2.getRoot()
-		while b.getHeight()>h:
-			b=b.getLeft()
-		x.setLeft(T1.getRoot())
-		if b.getParent()!=None:
-			c=b.getParent()
-			c.setLeft(x)
+	def join(self, T1, T2 ,x):
+		h1 = T1.getRoot().getHeight()
+		h2 = T2.getRoot().getHeight()
+		if h1 < h2:
+			a = T1.getRoot()
+			b = T2.getRoot()
+			while b.getHeight() > h1:
+				b = b.getLeft()
+			root = T2.getRoot()
+			# start joining
+			x.setLeft(a)
 			x.setRight(b)
-			self.rotateAndFixSizeField(x)
-			return T2.getRoot()
+			if b.getParent() is not None:
+				c = b.getParent()
+				c.setLeft(x)
 		else:
-			x.setRight(b)
-			return x
+			a = T2.getRoot()
+			b = T1.getRoot()
+			while b.getHeight > h2:
+				b = b.getRight()
+			root = T1.root
+			# start joining
+			x.setRight(a)
+			x.setLeft(b)
+			if b.getParent() is not None:
+				c = b.getParent()
+				c.setRight(x)
+		self.rotateAndFixSizeField(x)
+		return T2.getRoot()
 
 
 	"""searches for a *value* in the list
@@ -873,22 +882,21 @@ class AVLTreeList(object):
 
 my_tree = AVLTreeList()
 my_tree.insert(0,"a")
-"""my_tree.insert(1,"b")
-my_tree.insert(2,"c")"""
+my_tree.insert(1,"b")
+my_tree.insert(2,"c")
 
 print(my_tree)
 
-print(my_tree.search("a"))
-
-"""other_tree = AVLTreeList()
+other_tree = AVLTreeList()
 other_tree.insert(0,"d")
 other_tree.insert(1,"e")
 other_tree.insert(2,"f")
 other_tree.insert(3,"g")
 other_tree.insert(4,"h")
 other_tree.insert(5,"i")
-
-other_tree.concat(my_tree)"""
+print(other_tree)
+my_tree.concat(other_tree)
+print(my_tree)
 
 
 """my_tree.insert(1,4)
