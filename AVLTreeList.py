@@ -887,6 +887,19 @@ class AVLTreeList(object):
 		return self.root
 
 
+my_tree = AVLTreeList()
+my_tree.insert(0,"4")
+my_tree.insert(1,"6")
+my_tree.insert(2,"1")
+my_tree.insert(3,"1")
+my_tree.insert(0,"7")
+my_tree.delete(4)
+
+my_tree.delete(2)
+print(my_tree)
+
+
+
 """my_tree = AVLTreeList()
 my_tree.insert(0,"a")
 my_tree.insert(1,"b")
@@ -904,7 +917,7 @@ my_tree.concat(other_tree)
 
 print(other_tree) #other_tree changes and its not suppose to"""
 
-
+"""
 my_tree = AVLTreeList()
 my_tree.insert(0,"a")
 my_tree.insert(1,"b")
@@ -930,5 +943,7 @@ other_tree.insert(5,"p")
 my_tree.concat(other_tree)
 
 print(my_tree)
+"""
+
 
 
