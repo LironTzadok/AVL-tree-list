@@ -792,11 +792,13 @@ class AVLTreeList(object):
 	time complexity:O(log n)
 	"""
 	def concat(self, lst):
-		if lst.empty():
+		if lst.empty() and not self.empty():
 			return self.root.getHeight()
-		if self.empty():
+		if self.empty() and not lst.empty():
 			self.root = lst.getRoot()
 			return lst.getRoot().getHeight()
+		if self.empty() and lst.empty():
+			return 0
 		height_difference = abs(self.getRoot().getHeight()-lst.getRoot().getHeight())
 		x = self.max
 		self.delete(self.size - 1)
@@ -932,4 +934,7 @@ my_tree.insert(0,6)
 my_tree.insert(2,9)
 my_tree.insert(0,8)"""
 
-
+my_tree = AVLTreeList()
+other_tree = AVLTreeList()
+my_tree.concat(other_tree)
+print(my_tree)
