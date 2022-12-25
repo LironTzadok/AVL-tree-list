@@ -832,29 +832,37 @@ class AVLTreeList(object):
 	time complexity:O(log n)
 	"""
 	def join(self, T1, T2 ,x):
-		h1 = T1.getRoot().getHeight()
-		h2 = T2.getRoot().getHeight()
+		if T1.empty():
+			T1_root = AVLNode(None)
+		else:
+			T1_root = T1.getRoot()
+		if T2.empty():
+			T2_root = AVLNode(None)
+		else:
+			T2_root = T2.getRoot()
+		h1 = T1_root.getHeight()
+		h2 = T2_root.getHeight()
 		if abs(h1 - h2) <= 1:
-			x.setLeft(T1.getRoot())
-			x.setRight(T2.getRoot())
+			x.setLeft(T1_root)
+			x.setRight(T2_root)
 			root = x
 		elif h1 < h2:
-			a = T1.getRoot()
-			b = T2.getRoot()
+			a = T1_root
+			b = T2_root
 			while b.getHeight() > h1:
 				b = b.getLeft()
-			root = T2.getRoot()
+			root = T2_root
 			# start joining
 			x.setLeft(a)
 			c = b.getParent()
 			c.setLeft(x)
 			x.setRight(b)
 		else:
-			a = T2.getRoot()
-			b = T1.getRoot()
+			a = T2_root
+			b = T1_root
 			while b.getHeight() > h2:
 				b = b.getRight()
-			root = T1.getRoot()
+			root = T1_root
 			# start joining
 			x.setRight(a)
 			c = b.getParent()
@@ -893,70 +901,8 @@ class AVLTreeList(object):
 	def getRoot(self):
 		return self.root
 
-my_tree = AVLTreeList()
-my_tree.insert(0,"1")
-my_tree.insert(1,"0")
-print(my_tree)
-my_tree.delete(0)
 
-
-"""my_tree = AVLTreeList()
-my_tree.insert(0,"4")
-my_tree.insert(1,"6")
-my_tree.insert(2,"1")
-my_tree.insert(3,"1")
-my_tree.insert(0,"7")
-my_tree.delete(4)
-#print(my_tree)
-my_tree.delete(2)
-#print(my_tree)"""
-
-
-
-"""my_tree = AVLTreeList()
-my_tree.insert(0,"a")
-my_tree.insert(1,"b")
-my_tree.insert(2,"c")
-
-other_tree = AVLTreeList()
-other_tree.insert(0,"d")
-other_tree.insert(1,"e")
-other_tree.insert(2,"f")
-other_tree.insert(3,"g")
-other_tree.insert(4,"h")
-other_tree.insert(5,"i")
-
-my_tree.concat(other_tree)
-
-print(other_tree) #other_tree changes and its not suppose to"""
-
-"""
-my_tree = AVLTreeList()
-my_tree.insert(0,"a")
-my_tree.insert(1,"b")
-my_tree.insert(2,"c")
-my_tree.insert(3,"d")
-my_tree.insert(4,"e")
-my_tree.insert(5,"f")
-my_tree.insert(6,"g")
-my_tree.insert(7,"h")
-my_tree.insert(8,"i")
-my_tree.insert(9,"j")
-
-#print(my_tree)
-
-other_tree = AVLTreeList()
-other_tree.insert(0,"k")
-other_tree.insert(1,"l")
-other_tree.insert(2,"m")
-other_tree.insert(3,"n")
-other_tree.insert(4,"o")
-other_tree.insert(5,"p")
-
-my_tree.concat(other_tree)
-
-print(my_tree)
-"""
+my_tree=AVLTreeList()
 
 
 
