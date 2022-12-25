@@ -195,13 +195,16 @@ class AVLTreeList(object):
 		self.min = None
 		self.max = None
 
-
+	"""for the tester. remember to delete!"""
 	def __repr__(self):
 		out = ""
 		for row in printree(self.root):
 			out = out + row + "\n"
 		return out
 
+	"""for the tester. remember to delete!"""
+	def append(self, val):
+		self.insert(self.length(), val)
 
 	"""returns whether the list is empty
 
@@ -640,7 +643,7 @@ class AVLTreeList(object):
 	time complexity: O(n)
 	"""
 	def inOrder(self, node, array):
-		if(node.isRealNode()):
+		if(node is not None and node.isRealNode()):
 			self.inOrder(node.getLeft(), array)
 			array.append(node.getValue())
 			self.inOrder(node.getRight(), array)
@@ -824,7 +827,11 @@ class AVLTreeList(object):
 	def join(self, T1, T2 ,x):
 		h1 = T1.getRoot().getHeight()
 		h2 = T2.getRoot().getHeight()
-		if h1 < h2:
+		if abs(h1 - h2) <= 1:
+			x.setLeft(T1.getRoot())
+			x.setRight(T2.getRoot())
+			root = x
+		elif h1 < h2:
 			a = T1.getRoot()
 			b = T2.getRoot()
 			while b.getHeight() > h1:
@@ -832,11 +839,8 @@ class AVLTreeList(object):
 			root = T2.getRoot()
 			# start joining
 			x.setLeft(a)
-			if b.getParent() is not None:
-				c = b.getParent()
-				c.setLeft(x)
-			else:
-				root = x
+			c = b.getParent()
+			c.setLeft(x)
 			x.setRight(b)
 		else:
 			a = T2.getRoot()
@@ -846,13 +850,10 @@ class AVLTreeList(object):
 			root = T1.getRoot()
 			# start joining
 			x.setRight(a)
-			if b.getParent() is not None:
-				c = b.getParent()
-				c.setRight(x)
-			else:
-				root = x
+			c = b.getParent()
+			c.setRight(x)
 			x.setLeft(b)
-		self.rotateAndFixSizeField(x)
+		self.rotateAndFixSizeField(x.getLeft())
 		return root
 
 
@@ -901,8 +902,8 @@ other_tree.insert(5,"i")
 
 my_tree.concat(other_tree)
 
-print(other_tree) #other_tree changes and its not suppose to
-"""
+print(other_tree) #other_tree changes and its not suppose to"""
+
 
 my_tree = AVLTreeList()
 my_tree.insert(0,"a")
@@ -916,7 +917,7 @@ my_tree.insert(7,"h")
 my_tree.insert(8,"i")
 my_tree.insert(9,"j")
 
-print(my_tree)
+#print(my_tree)
 
 other_tree = AVLTreeList()
 other_tree.insert(0,"k")

@@ -1,4 +1,5 @@
-from avl_skeleton import AVLTreeList
+#from avl_skeleton import AVLTreeList
+from AVLTreeList import *
 
 """
 IN ORDER TO USE THE INTERACTIVE TREE TOU NEED TO HAVE A PRINT METHOD IN YOUR AVLTreeList CLASS AND NAME IT
@@ -78,6 +79,7 @@ def rightspace(self, row):
 
 def interactive_tree():
     T = AVLTreeList()
+    T.insert(0,"a")
     while True:
         choice = input("choose an operation you want to do with your AVLTreeList from the following: \n \
             empty(), retrieve(i), insert(i,val) delete(i),\n\
@@ -128,7 +130,7 @@ def interactive_tree():
                 "if you want to print the tree representing the first list enter 'yes'\n\
                     enter your choice here:  ")
             if ans == "yes":
-                T1.printt()
+                print(T1)
                 print(T1.listToArray())
             ans = input("if you want to print the value of the " +
                         str(index) + "'th index enter 'yes'\n\
@@ -139,7 +141,7 @@ def interactive_tree():
                 "if you want to print the tree representing the second list enter 'yes'\n\
                 enter your choice here:  ")
             if ans == "yes":
-                T2.printt()
+                print(T2)
                 print(T2.listToArray())
             while True:
                 ans = input(
@@ -168,7 +170,7 @@ def interactive_tree():
             for val in lst:
                 L.insert(L.length(), val)
             print("the avlTreeList that had been concatenated to your list is: ")
-            L.printt()
+            print(L)
             print(L.listToArray())
             T.concat(L)
         elif choice[:6] == "search":
@@ -185,7 +187,7 @@ def interactive_tree():
             "enter 'yes' if you want to print your AVLTreeList\n\
             enter your choice here:  ")
         if ans == "yes":
-            T.printt()
+            print(T)
             print(T.listToArray())
 
 

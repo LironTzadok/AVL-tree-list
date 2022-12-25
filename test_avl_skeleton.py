@@ -1,5 +1,5 @@
-from avl_skeleton import AVLTreeList
 import unittest
+from AVLTreeList import *
 
 
 """
@@ -198,8 +198,8 @@ class testAVLList(unittest.TestCase):
         T.insert(0, 1)
         T.delete(0)
         self.assertIsNone(T.getRoot())
-        self.assertIsNone(T.firstItem)
-        self.assertIsNone(T.lastItem)
+        self.assertIsNone(T.min)
+        self.assertIsNone(T.max)
         self.assertIsNone(T.first())
         self.assertIsNone(T.last())
 
