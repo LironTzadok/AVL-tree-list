@@ -880,12 +880,10 @@ class AVLTreeList(object):
 		return self.root
 
 
-my_tree = AVLTreeList()
+"""my_tree = AVLTreeList()
 my_tree.insert(0,"a")
 my_tree.insert(1,"b")
 my_tree.insert(2,"c")
-
-print(my_tree)
 
 other_tree = AVLTreeList()
 other_tree.insert(0,"d")
@@ -894,10 +892,34 @@ other_tree.insert(2,"f")
 other_tree.insert(3,"g")
 other_tree.insert(4,"h")
 other_tree.insert(5,"i")
-print(other_tree)
-other_tree.concat(my_tree)
-print(other_tree)
 
+my_tree.concat(other_tree)
+
+print(other_tree) #other_tree changes and its not suppose to
+"""
+
+my_tree = AVLTreeList()
+my_tree.insert(0,"a")
+my_tree.insert(1,"b")
+my_tree.insert(2,"c")
+my_tree.insert(3,"d")
+my_tree.insert(4,"e")
+my_tree.insert(5,"f")
+
+
+#print(my_tree)
+
+other_tree = AVLTreeList()
+other_tree.insert(0,"g")
+other_tree.insert(1,"h")
+other_tree.insert(2,"i")
+other_tree.insert(3,"j")
+other_tree.insert(4,"k")
+other_tree.insert(5,"l")
+
+my_tree.concat(other_tree)
+
+print(my_tree)
 
 """my_tree.insert(1,4)
 my_tree.insert(3,7)
