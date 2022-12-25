@@ -830,24 +830,24 @@ class AVLTreeList(object):
 			root = T2.getRoot()
 			# start joining
 			x.setLeft(a)
-			x.setRight(b)
 			if b.getParent() is not None:
 				c = b.getParent()
 				c.setLeft(x)
+			x.setRight(b)
 		else:
 			a = T2.getRoot()
 			b = T1.getRoot()
-			while b.getHeight > h2:
+			while b.getHeight() > h2:
 				b = b.getRight()
 			root = T1.root
 			# start joining
 			x.setRight(a)
-			x.setLeft(b)
 			if b.getParent() is not None:
 				c = b.getParent()
 				c.setRight(x)
+			x.setLeft(b)
 		self.rotateAndFixSizeField(x)
-		return T2.getRoot()
+		return root
 
 
 	"""searches for a *value* in the list
@@ -895,8 +895,8 @@ other_tree.insert(3,"g")
 other_tree.insert(4,"h")
 other_tree.insert(5,"i")
 print(other_tree)
-my_tree.concat(other_tree)
-print(my_tree)
+other_tree.concat(my_tree)
+print(other_tree)
 
 
 """my_tree.insert(1,4)
