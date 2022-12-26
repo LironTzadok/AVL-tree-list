@@ -226,6 +226,10 @@ class AVLTreeList(object):
 	time complexity: O(log n)
 	"""
 	def retrieve(self, i):
+		if self.root is None:
+			return None
+		if i > self.size or i < 0:
+			return None
 		return self.treeSelect(self.root, i + 1).getValue()
 
 
@@ -239,6 +243,10 @@ class AVLTreeList(object):
 	time complexity: O(log n)
 	"""
 	def retrieveNode(self, i):
+		if self.root is None:
+			return None
+		if i > self.size or i < 0:
+			return None
 		return self.treeSelect(self.root, i + 1)
 
 
@@ -253,8 +261,6 @@ class AVLTreeList(object):
 	time complexity: O(log n)
 	"""
 	def treeSelect(self, node, i):
-		if i > node.getSize():
-			return None
 		left_size = 1
 		if node.getLeft() is not None and node.getLeft().isRealNode():
 			left_size = node.getLeft().getSize() + 1
@@ -458,7 +464,7 @@ class AVLTreeList(object):
 	time complexity: O(log n)
 	"""
 	def delete(self, i):
-		if i >= self.size:
+		if i >= self.size or i < 0:
 			return -1
 		node_to_delete = self.retrieveNode(i)
 		if node_to_delete == self.root:
@@ -526,15 +532,22 @@ class AVLTreeList(object):
 			successor_node = self.successor(node_to_delete)
 			sum_rotations = self.delete(i+1)
 			self.size += 1
+			# node_to_delete is not the root anymore after the successor deletion completed the rotations
 			if node_to_delete.getParent() is not None:
 				if node_to_delete.getParent().getRight() == node_to_delete:
 					node_to_delete.getParent().setRight(successor_node)
 				else:
 					node_to_delete.getParent().setLeft(successor_node)
+			# node_to_delete is still the root after the successor deletion completed the rotations
+			else:
+				successor_node.setParent(None)
+				self.root = successor_node
 			successor_node.setRight(node_to_delete.getRight())
 			successor_node.setLeft(node_to_delete.getLeft())
 			successor_node.setSize(node_to_delete.getSize())
 			successor_node.setHeight(node_to_delete.getHeight())
+			if(self.max == node_to_delete):
+				self.max = successor_node
 			#self.root = successor_node
 		elif node_to_delete.getRight().isRealNode(): #right child
 			self.root = node_to_delete.getRight()
@@ -903,5 +916,3 @@ class AVLTreeList(object):
 	"""
 	def getRoot(self):
 		return self.root
-
-

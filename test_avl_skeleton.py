@@ -1303,7 +1303,7 @@ class testAVLList(unittest.TestCase):
         res = T.split(5)
         self.check_split(L, res, 5)"""
 
-    def test_split_basic_in_range(self):
+    """def test_split_basic_in_range(self):
         for j in range(10):
             print(j)
             L = []
@@ -1314,7 +1314,7 @@ class testAVLList(unittest.TestCase):
                 T.append(i)
 
             res = T.split(j)
-            self.check_split(L, res, j)
+            self.check_split(L, res, j)"""
 
     """def test_split_small(self):
         T = AVLTreeList()
