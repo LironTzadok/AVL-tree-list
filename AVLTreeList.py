@@ -255,14 +255,14 @@ class AVLTreeList(object):
 	def treeSelect(self, node, i):
 		if i > node.getSize():
 			return None
-		left_size = 0
+		left_size = 1
 		if node.getLeft() is not None and node.getLeft().isRealNode():
 			left_size = node.getLeft().getSize() + 1
-			if i == left_size:
-				return node
-			if i < left_size:
-				return self.treeSelect(node.getLeft(), i)
-		if node.getRight() is not None and node.getRight().isRealNode():
+		if i == left_size:
+			return node
+		if i < left_size:
+			return self.treeSelect(node.getLeft(), i)
+		elif node.getRight() is not None and node.getRight().isRealNode():
 			return self.treeSelect(node.getRight(), i - left_size)
 
 
@@ -903,8 +903,5 @@ class AVLTreeList(object):
 	"""
 	def getRoot(self):
 		return self.root
-
-
-
 
 
