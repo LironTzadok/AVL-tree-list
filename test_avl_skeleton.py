@@ -929,6 +929,11 @@ class testAVLList(unittest.TestCase):
             T.delete(0)
             L.pop(0)
             for j in range(len(L)):
+                if T.root==49:
+                    print(T)
+                    print(L[j])
+                    print("search is:",T.search(L[j]))
+                    print("j is:",j)
                 self.assertEqual(T.search(L[j]), j)
             self.assertEqual(-1, T.search(-20))
 
@@ -1258,6 +1263,7 @@ class testAVLList(unittest.TestCase):
                              T4.getRoot().getHeight()), T3.concat(T4))
 
     ### TESTING SPLIT ###
+    """ 
     def check_root(self, tree):
         if not tree.empty():
             self.assertIsNone(tree.getRoot().getParent())
@@ -1292,7 +1298,8 @@ class testAVLList(unittest.TestCase):
         self.in_order(res[2], res[2].getRoot(), self.check_BF)
         self.check_root(res[2])
 
-    """def test_split_basic(self):
+    
+    def test_split_basic(self):
         L = []
         T = AVLTreeList()
 
@@ -1301,9 +1308,10 @@ class testAVLList(unittest.TestCase):
             T.append(i)
 
         res = T.split(5)
-        self.check_split(L, res, 5)"""
+        self.check_split(L, res, 5)
 
-    """def test_split_basic_in_range(self):
+
+    def test_split_basic_in_range(self):
         for j in range(10):
             print(j)
             L = []
@@ -1400,6 +1408,7 @@ class testAVLList(unittest.TestCase):
         self.assertEqual(T.append(3), 0)
         self.assertEqual(T.insert(0, 1), 0)
         self.assertEqual(T.insert(1, 2), 2)
+
 
     # def test_successor_and_predeccessor(self):
     #     T = AVLTreeList()

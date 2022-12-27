@@ -777,6 +777,8 @@ class AVLTreeList(object):
 	time complexity:O(n)
 	"""
 	def makeAVLOutOfAList(self, list):
+		if len(list)==0:
+			return AVLTreeList()
 		shuffled_tree = AVLTreeList()
 		mid = (len(list)) // 2
 		shuffled_tree.root = self.createRealNode(list[mid])
@@ -928,6 +930,9 @@ class AVLTreeList(object):
 
 
 T = AVLTreeList()
-print(T.append(3))
-#self.assertEqual(T.insert(0, 1), 1)
-#self.assertEqual(T.insert(1, 2), 3)
+T.insert(0,2)
+T.insert(1,1)
+T.insert(2,0)
+print(T)
+T.sort()
+print(T)
