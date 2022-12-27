@@ -204,7 +204,7 @@ class AVLTreeList(object):
 
 	"""for the tester. remember to delete!"""
 	def append(self, val):
-		self.insert(self.length(), val)
+		return self.insert(self.length(), val)
 
 	"""returns whether the list is empty
 
@@ -289,8 +289,8 @@ class AVLTreeList(object):
 			self.min = new_node
 		if self.empty():
 			self.root = new_node
-			self.max=new_node
-			self.min=new_node
+			self.max = new_node
+			self.min = new_node
 		elif i == self.size:
 			self.max.setRight(new_node)
 			self.max = new_node
@@ -553,7 +553,7 @@ class AVLTreeList(object):
 			self.root.setParent(None)
 		if(node_to_delete == self.min):
 			self.min = self.minNode(self.root)
-		elif(node_to_delete == self.max):
+		if(node_to_delete == self.max):
 			self.max = self.maxNode(self.root)
 		self.size -= 1
 		return sum_rotations
@@ -925,3 +925,9 @@ class AVLTreeList(object):
 	"""
 	def getRoot(self):
 		return self.root
+
+
+T = AVLTreeList()
+print(T.append(3))
+#self.assertEqual(T.insert(0, 1), 1)
+#self.assertEqual(T.insert(1, 2), 3)
