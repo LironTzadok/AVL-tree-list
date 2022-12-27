@@ -545,14 +545,16 @@ class AVLTreeList(object):
 			successor_node.setLeft(node_to_delete.getLeft())
 			successor_node.setSize(node_to_delete.getSize())
 			successor_node.setHeight(node_to_delete.getHeight())
-			if(self.max == node_to_delete):
-				self.max = successor_node
 		elif node_to_delete.getRight().isRealNode(): #right child
 			self.root = node_to_delete.getRight()
 		elif node_to_delete.getLeft().isRealNode(): #left child
 			self.root = node_to_delete.getLeft()
 		if self.root != None:
 			self.root.setParent(None)
+		if(node_to_delete == self.min):
+			self.min = self.minNode(self.root)
+		elif(node_to_delete == self.max):
+			self.max = self.maxNode(self.root)
 		self.size -= 1
 		return sum_rotations
 
@@ -566,9 +568,12 @@ class AVLTreeList(object):
 	time complexity: O(log n)
 	"""
 	def maxNode(self, node):
-		while node.getRight().isRealNode():
-			node = node.getRight()
-		return node
+		#if tree is not empty
+		if node is not None:
+			while node.getRight().isRealNode():
+				node = node.getRight()
+			return node
+		return None
 
 
 	"""returns the smallest node in the tree if called from root.
@@ -579,10 +584,13 @@ class AVLTreeList(object):
 	@returns: returns the smallest node in the subtree of node. if node is the root, then returns the smallest node in the tree
 	time complexity: O(log n)
 	"""
-	def minNode(self,node):
-		while node.getLeft().isRealNode():
-			node = node.getLeft()
-		return node
+	def minNode(self, node):
+		#if tree is not empty
+		if node is not None:
+			while node.getLeft().isRealNode():
+				node = node.getLeft()
+			return node
+		return None
 
 
 	"""returns the predecessor of node, in case node has a left child
@@ -917,4 +925,3 @@ class AVLTreeList(object):
 	"""
 	def getRoot(self):
 		return self.root
-
