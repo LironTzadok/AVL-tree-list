@@ -1220,8 +1220,8 @@ class testAVLList(unittest.TestCase):
             T2.append(i)
 
         # the height of an empty tree is -1.
-        self.assertEqual(T1.concat(T3), 2)
-        self.assertEqual(T4.concat(T2), 2)
+        self.assertEqual(T1.concat(T3), 1)
+        self.assertEqual(T4.concat(T2), 1)
 
     def test_assert_height_difference_non_empty_lists(self):
         T1 = AVLTreeList()
