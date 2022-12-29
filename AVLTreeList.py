@@ -3,7 +3,6 @@
 #name1    - Tal Ben Tov
 #id2      - 208005835
 #name2    - Liron Tzadok
-from printree import *
 import random
 
 """A class represnting a node in an AVL tree"""
@@ -22,16 +21,6 @@ class AVLNode(object):
 		self.parent = None
 		self.height = -1
 		self.size = 0
-
-
-	"""responsible printing node in specific format
-	
-	@rtype: None
-	@returns: None
-	time complexity: O(1)
-	"""
-	def __repr__(self):
-		return "(" + str(self.value) + ")"
 
 
 	"""returns the left child
@@ -195,16 +184,6 @@ class AVLTreeList(object):
 		self.min = None
 		self.max = None
 
-	"""for the tester. remember to delete!"""
-	def __repr__(self):
-		out = ""
-		for row in printree(self.root):
-			out = out + row + "\n"
-		return out
-
-	"""for the tester. remember to delete!"""
-	def append(self, val):
-		return self.insert(self.length(), val)
 
 	"""returns whether the list is empty
 
@@ -306,6 +285,7 @@ class AVLTreeList(object):
 		self.size += 1
 		return sum_rotations
 
+
 	"""fixes height and size fields after insert / delete / concat, using rotations
 
 	@type node_inserted: AVLNode
@@ -349,6 +329,7 @@ class AVLTreeList(object):
 			y = y.getParent()
 		return sum_rotations
 
+
 	"""performs a right rotation on node
 
 	@type node: AVLNode
@@ -377,6 +358,7 @@ class AVLTreeList(object):
 		z.setSize(z.getLeft().getSize() + z.getRight().getSize() + 1)
 		z.setHeight(max(z.getLeft().getHeight(), z.getRight().getHeight()) + 1)
 		y.setHeight(max(y.getLeft().getHeight(), y.getRight().getHeight()) + 1)
+
 
 	"""performs a left rotation on node
 
@@ -407,6 +389,7 @@ class AVLTreeList(object):
 		z.setHeight(max(z.getLeft().getHeight(), z.getRight().getHeight()) + 1)
 		y.setHeight(max(y.getLeft().getHeight(), y.getRight().getHeight()) + 1)
 
+
 	"""performs a "right then left" rotation on node
 
 	@type node: AVLNode
@@ -420,6 +403,7 @@ class AVLTreeList(object):
 			self.leftRotate(node, False, node.getParent().getLeft() == node)
 		else:
 			self.leftRotate(node, True)
+
 
 	"""performs a "left then right" rotation on node
 
@@ -672,7 +656,7 @@ class AVLTreeList(object):
 	time complexity: O(n)
 	"""
 	def inOrder(self, node, array):
-		if(node is not None and node.isRealNode()):
+		if node is not None and node.isRealNode():
 			self.inOrder(node.getLeft(), array)
 			array.append(node.getValue())
 			self.inOrder(node.getRight(), array)
@@ -701,6 +685,7 @@ class AVLTreeList(object):
 		sorted_AVL = self.makeAVLOutOfAList(sorted_list)
 		return sorted_AVL
 
+
 	"""sorts an array of values
 
 	@rtype: array
@@ -708,10 +693,11 @@ class AVLTreeList(object):
 	time complexity: O(n*log n)
 	"""
 	def mergeSort(self, list):
-		n=len(list)
-		if n<=1:
+		n = len(list)
+		if n <= 1:
 			return list
 		return self.merge(self.mergeSort(list[0:n//2]), self.mergeSort(list[n//2:n]))
+
 
 	"""merges two sorted arrays into one sorted array
 
@@ -728,20 +714,21 @@ class AVLTreeList(object):
 		n = len(list1)
 		m = len(list2)
 		merged_list = [0 for i in range(n+m)]
-		a=0; b=0; c=0
-		while  a<n  and  b<m:
+		a = 0; b = 0; c = 0
+		while  a < n  and  b < m:
 			if list1[a] < list2[b]:
 				merged_list[c] = list1[a]
-				a+=1
+				a += 1
 			else:
 				merged_list[c] = list2[b]
-				b+=1
-			c+=1
+				b += 1
+			c += 1
 		merged_list[c:] = list1[a:] + list2[b:]
 		return merged_list
 
-	"""permute the info values of the list 
 
+	"""permute the info values of the list 
+	
 	@rtype: AVLTreeList
 	@returns: an AVLTreeList where the values are permuted randomly by the info of the original list. ##Use Randomness
 	time complexity:O(n)
@@ -754,7 +741,8 @@ class AVLTreeList(object):
 
 
 	"""shuffles a list
-
+	@type list: array
+	@param list: a list to shuffle
 	@rtype: list
 	@returns: a list where the values are permuted randomly by the info of the original list. ##Use Randomness
 	time complexity:O(n)
@@ -771,7 +759,8 @@ class AVLTreeList(object):
 
 
 	""" makes an AVLTreeList from a given list
-
+	@type list: array
+	@param list: a list to make a AVLTreeList of
 	@rtype: AVLTreeList
 	@returns: an AVLTreeList that nodes in it are ordered by their index in the given list
 	time complexity:O(n)
@@ -791,7 +780,14 @@ class AVLTreeList(object):
 
 
 	""" creates a subtree from a given list
-
+	@type list: array
+	@param list: a list to make a AVLTreeList of
+	@type start: int
+	@param start: the index of the start of the sub array
+	@type end: int
+	@param end: the index of the end of the sub array
+	@type tree: AVLTreeList
+	@param tree: the tree that the method is building from the list
 	@rtype: AVLNode
 	@returns: an AVLNode with the value of the list[middle of start + end]. the AVLNode left's child is an AVL subtree
 	made of the left side of the array (from middle index to 0 index) the right child is an AVL subtree made of the 
@@ -910,12 +906,12 @@ class AVLTreeList(object):
 	def search(self, val):
 		if self.empty():
 			return -1
-		node=self.min
-		index=0
-		while node != None and node.isRealNode() and node.getValue()!=val:
-			index+=1
-			node=self.successor(node)
-		if node != None and node.isRealNode() and node.getValue()==val:
+		node = self.min
+		index = 0
+		while node is not None and node.isRealNode() and node.getValue()!= val:
+			index += 1
+			node = self.successor(node)
+		if node is not None and node.isRealNode() and node.getValue() == val:
 			return index
 		return -1
 
@@ -927,12 +923,3 @@ class AVLTreeList(object):
 	"""
 	def getRoot(self):
 		return self.root
-
-
-T = AVLTreeList()
-T.insert(0,2)
-T.insert(1,1)
-T.insert(2,0)
-print(T)
-T.sort()
-print(T)
